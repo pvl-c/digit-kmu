@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digit.KMU — KI-gestützte Digitalisierung für Industrie-KMU</title>
+  <meta name="description" content="Modulare KI-Digitalisierung für kleine und mittlere Industriebetriebe. Analyse, Datenhub, Produktion, Smart Operations — Schritt für Schritt, ohne Overhead.">
+  <meta name="keywords" content="KMU Digitalisierung, KI Industrie, Predictive Maintenance, Qualitätssicherung, Smart Operations, Industrie 4.0, Mittelstand">
+  <meta name="author" content="Digit.KMU">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://digit-kmu.de">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Digit.KMU — KI-gestützte Digitalisierung für Industrie-KMU">
+  <meta property="og:description" content="Modulare KI-Digitalisierung für kleine und mittlere Industriebetriebe. Schritt für Schritt, ohne Overhead.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://digit-kmu.de">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230c0d0d'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23c8a96e'>D.</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #0c0d0d;
+      --bg2:     #111213;
+      --surface: #181a1b;
+      --surface2:#1f2122;
+      --border:  #2c2f30;
+      --border2: #3a3e3f;
+      --text:    #dedad4;
+      --text2:   #b8b4ae;
+      --muted:   #7a7872;
+      --accent:  #c8a96e;
+      --accent2: #d4b87a;
+      --white:   #f0ede8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.3rem 3.5rem;
+      background: rgba(12,13,13,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s ease, box-shadow 0.3s ease;
+    }
+    nav.scrolled {
+      padding: 0.9rem 3.5rem;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 1.05rem; letter-spacing: 0.05em; color: var(--white);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { transform: scaleX(1); transform-origin: left; }
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 110;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--white);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99;
+      background: rgba(12,13,13,0.97);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center; gap: 2.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: auto; }
+    .mobile-menu a {
+      font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 600;
+      color: var(--white); text-decoration: none;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s ease;
+    }
+    .mobile-menu.open a {
+      opacity: 1; transform: translateY(0);
+    }
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.18s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.26s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.34s; }
+    .mobile-menu a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 3.5rem 5.5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,169,110,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,169,110,0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 70%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; bottom: -120px; left: -60px;
+      width: 700px; height: 600px;
+      background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 65%);
+      pointer-events: none;
+      animation: glowPulse 6s ease-in-out infinite;
+    }
+    .hero-glow-2 {
+      position: absolute; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,169,110,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      animation: glowPulse 8s ease-in-out infinite 2s;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.08); }
+    }
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.73rem; letter-spacing: 0.14em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 0.9rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.15s;
+    }
+    .hero-tag::before {
+      content: ''; display: block; width: 28px; height: 1px;
+      background: var(--accent); opacity: 0.6;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(3rem, 6.5vw, 6rem);
+      line-height: 1.03; letter-spacing: -0.025em;
+      color: var(--white); max-width: 860px;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
+    }
+    .hero h1 em {
+      font-style: normal; color: var(--accent);
+      text-shadow: 0 0 80px rgba(200,169,110,0.15);
+    }
+    .hero-sub {
+      margin-top: 2.2rem; max-width: 540px;
+      font-size: 1.08rem; font-weight: 300; color: var(--text2); line-height: 1.85;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.45s;
+    }
+    .hero-stats {
+      margin-top: 4rem; display: flex; align-items: center; gap: 3rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s;
+    }
+    .hero-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+    .hero-stat .n {
+      font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800;
+      color: var(--white); line-height: 1;
+    }
+    .hero-stat .l { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.02em; }
+    .h-div { width: 1px; height: 38px; background: var(--border2); }
+
+    /* ── SCROLL CTA ── */
+    .scroll-hint {
+      position: absolute; bottom: 2rem; right: 3.5rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 1s;
+    }
+    .scroll-hint span {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px; height: 40px; background: var(--border2);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute; top: -100%; left: 0;
+      width: 1px; height: 100%; background: var(--accent);
+      animation: scrollDown 2s ease-in-out infinite;
+    }
+    @keyframes scrollDown {
+      0% { top: -100%; }
+      50% { top: 100%; }
+      100% { top: 100%; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6.5rem 3.5rem; border-top: 1px solid var(--border); }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.1rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .section-label::before {
+      content: ''; display: block; width: 20px; height: 1px;
+      background: var(--accent); opacity: 0.5;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: clamp(1.9rem, 3.5vw, 2.9rem);
+      line-height: 1.12; color: var(--white);
+      letter-spacing: -0.015em; max-width: 640px;
+    }
+
+    /* ── ANSATZ ── */
+    .ansatz-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 3.5rem; align-items: start;
+    }
+    .ansatz-text p {
+      font-size: 1rem; color: var(--text2); line-height: 1.9;
+    }
+    .ansatz-text p + p { margin-top: 1.1rem; }
+    .ansatz-steps { display: flex; flex-direction: column; }
+    .ansatz-step {
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease, padding-left 0.3s ease;
+      border-radius: 2px;
+    }
+    .ansatz-step:first-child { border-top: 1px solid var(--border); }
+    .ansatz-step:hover {
+      background: rgba(200,169,110,0.03);
+      padding-left: 1rem;
+    }
+    .step-num {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.1em; color: var(--accent);
+      min-width: 28px; padding-top: 0.28rem;
+      transition: color 0.3s ease;
+    }
+    .ansatz-step:hover .step-num { color: var(--accent2); }
+    .step-body h4 {
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+      color: var(--white); margin-bottom: 0.3rem;
+    }
+    .step-body p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; }
+
+    /* ── MODULES ── */
+    .modules { background: var(--bg2); }
+    .module-list { margin-top: 3.5rem; }
+    .module-item {
+      display: grid; grid-template-columns: 80px 1fr 300px;
+      gap: 3rem; align-items: start;
+      padding: 3.5rem 0; border-top: 1px solid var(--border);
+      transition: border-color 0.4s ease;
+    }
+    .module-item:last-child { border-bottom: 1px solid var(--border); }
+    .module-item:hover { border-top-color: var(--border2); }
+
+    .module-num { display: flex; flex-direction: column; gap: 0.6rem; padding-top: 0.2rem; }
+    .module-badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.08em; font-weight: 500;
+      color: var(--bg); background: var(--accent);
+      padding: 0.22rem 0.55rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .module-item:hover .module-badge {
+      box-shadow: 0 0 16px rgba(200,169,110,0.3);
+    }
+    .module-slug {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.08em; color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .module-kicker {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.1em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .module-title {
+      font-family: 'Syne', sans-serif; font-size: 1.45rem; font-weight: 700;
+      color: var(--white); letter-spacing: -0.01em;
+      line-height: 1.22; margin-bottom: 1.2rem;
+    }
+    .module-desc { font-size: 0.96rem; color: var(--text2); line-height: 1.9; }
+    .module-desc + .module-desc { margin-top: 0.9rem; }
+    .module-tags {
+      display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.5rem;
+    }
+    .tag {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.07em; color: var(--text2);
+      border: 1px solid var(--border2); padding: 0.28rem 0.72rem;
+      border-radius: 2px; text-transform: uppercase;
+      transition: border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(200,169,110,0.08);
+    }
+
+    .module-outcome {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-left: 2px solid var(--accent);
+      padding: 1.8rem 1.6rem; align-self: center;
+      transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+    }
+    .module-item:hover .module-outcome {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(200,169,110,0.08);
+      transform: translateY(-2px);
+    }
+    .outcome-label {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.63rem;
+      letter-spacing: 0.12em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 0.9rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .outcome-label::before { content: '\25B8'; font-size: 0.58rem; }
+    .module-outcome p { font-size: 0.93rem; color: var(--text); line-height: 1.82; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 3.5rem; align-items: start;
+    }
+    .about-text p { font-size: 1rem; color: var(--text2); line-height: 1.9; }
+    .about-text p + p { margin-top: 1.2rem; }
+    .principles { display: flex; flex-direction: column; }
+    .principle {
+      display: flex; gap: 1.4rem; align-items: flex-start;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease, padding-left 0.3s ease;
+      border-radius: 2px;
+    }
+    .principle:first-child { border-top: 1px solid var(--border); }
+    .principle:hover {
+      background: rgba(200,169,110,0.03);
+      padding-left: 1rem;
+    }
+    .p-num {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.63rem;
+      letter-spacing: 0.08em; color: var(--accent); min-width: 22px; padding-top: 0.25rem;
+    }
+    .p-body h4 {
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+      color: var(--white); margin-bottom: 0.3rem;
+    }
+    .p-body p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact::before {
+      content: '';
+      position: absolute; top: -200px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(200,169,110,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 3.5rem; align-items: start;
+      position: relative;
+    }
+    .contact-text p { font-size: 1rem; color: var(--text2); line-height: 1.9; }
+    .contact-text p + p { margin-top: 1.2rem; }
+    .contact-rows { display: flex; flex-direction: column; }
+    .contact-row {
+      display: flex; align-items: baseline; gap: 1.5rem;
+      padding: 1.3rem 0; border-bottom: 1px solid var(--border);
+      transition: padding-left 0.3s ease, background 0.3s ease;
+      border-radius: 2px;
+    }
+    .contact-row:first-child { border-top: 1px solid var(--border); }
+    .contact-row:hover {
+      padding-left: 0.8rem;
+      background: rgba(200,169,110,0.02);
+    }
+    .cr-label {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.63rem;
+      letter-spacing: 0.1em; color: var(--accent);
+      text-transform: uppercase; min-width: 110px;
+    }
+    .cr-value { font-size: 0.96rem; color: var(--text); }
+    .cr-value a {
+      color: var(--text); text-decoration: none;
+      border-bottom: 1px solid var(--border2);
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .cr-value a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.8rem 3.5rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    footer span {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.8rem; }
+      nav.scrolled { padding: 0.9rem 1.8rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 4.5rem 1.8rem; }
+      .hero { padding: 0 1.8rem 4rem; }
+      .hero h1 { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+      .hero-stats { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .h-div { width: 38px; height: 1px; }
+      .scroll-hint { display: none; }
+      .ansatz-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .module-item { grid-template-columns: 1fr; gap: 1.8rem; padding: 2.5rem 0; }
+      .module-outcome { align-self: stretch; }
+      footer { padding: 1.5rem 1.8rem; flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+    }
+
+    /* ── SELECTION ── */
+    ::selection {
+      background: rgba(200,169,110,0.25);
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Digit<span>.</span>KMU</div>
+  <ul class="nav-links">
+    <li><a href="#ansatz">Ansatz</a></li>
+    <li><a href="#module">Module</a></li>
+    <li><a href="#ueber-uns">Über uns</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <div class="hamburger" aria-label="Menü öffnen" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="#ansatz">Ansatz</a>
+  <a href="#module">Module</a>
+  <a href="#ueber-uns">Über uns</a>
+  <a href="#kontakt">Kontakt</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-tag">KI-gestützte Digitalisierung · Industrie-KMU</div>
+  <h1>Industrielle<br>Prozesse.<br><em>Digital gemacht.</em></h1>
+  <p class="hero-sub">
+    Wir helfen kleinen und mittleren Industriebetrieben, ihre Prozesse
+    sichtbar zu machen, zu verstehen und gezielt zu verbessern —
+    modular, ohne Overhead, Schritt für Schritt.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="n">M0 → M3</div>
+      <div class="l">Vier Module · Jedes eigenständig nutzbar</div>
+    </div>
+    <div class="h-div"></div>
+    <div class="hero-stat">
+      <div class="n">2–4 W</div>
+      <div class="l">Erste Ergebnisse · Kein Jahresprojekt</div>
+    </div>
+    <div class="h-div"></div>
+    <div class="hero-stat">
+      <div class="n">KMU</div>
+      <div class="l">20–200 MA · Industrie · B2B</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ANSATZ -->
+<section id="ansatz">
+  <div class="section-label reveal">Unser Ansatz</div>
+  <h2 class="section-title reveal reveal-delay-1">Erst verstehen — dann umsetzen.</h2>
+  <div class="ansatz-grid">
+    <div class="ansatz-text reveal reveal-delay-2">
+      <p>Digitalisierung scheitert nicht an fehlender Technologie. Sie scheitert daran, dass zu viel auf einmal angegangen wird — ohne klare Grundlage, ohne Priorisierung.</p>
+      <p>Unser Ansatz folgt einer einfachen Logik: Zuerst verstehen wir, wie der Betrieb tatsächlich funktioniert. Dann setzen wir gezielt dort an, wo der Nutzen am größten ist. Jede Stufe liefert sofort praktische Ergebnisse — und schafft gleichzeitig die Basis für die nächste.</p>
+      <p>Das bedeutet: kein Alles-oder-nichts. Kein halbes Jahr Wartezeit bis zum ersten Ergebnis. Und keine Lösung, die für alle passt, aber für niemanden wirklich funktioniert.</p>
+    </div>
+    <div class="ansatz-steps">
+      <div class="ansatz-step reveal reveal-delay-1">
+        <div class="step-num">M0</div>
+        <div class="step-body">
+          <h4>Analyse & Bestandsaufnahme</h4>
+          <p>Digitaler Status quo erfassen. Schwachstellen identifizieren. Priorisieren.</p>
+        </div>
+      </div>
+      <div class="ansatz-step reveal reveal-delay-2">
+        <div class="step-num">M1</div>
+        <div class="step-body">
+          <h4>Daten sichtbar machen</h4>
+          <p>Zentraler Datenhub, strukturierte Dokumentation, KI-gestützte Suche.</p>
+        </div>
+      </div>
+      <div class="ansatz-step reveal reveal-delay-3">
+        <div class="step-num">M2</div>
+        <div class="step-body">
+          <h4>Produktion live erfassen</h4>
+          <p>Qualitätssicherung digital. Tracking. Rückverfolgbarkeit in Echtzeit.</p>
+        </div>
+      </div>
+      <div class="ansatz-step reveal reveal-delay-4">
+        <div class="step-num">M3</div>
+        <div class="step-body">
+          <h4>Smart Operations</h4>
+          <p>KI-Analyse, Frühwarnungen, Predictive Maintenance, Entscheidungsunterstützung.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE -->
+<section id="module" class="modules">
+  <div class="section-label reveal">Was wir umsetzen</div>
+  <h2 class="section-title reveal reveal-delay-1">Vier Module. Ein durchgängiges System.</h2>
+
+  <div class="module-list">
+
+    <div class="module-item reveal">
+      <div class="module-num">
+        <div class="module-badge">M · 0</div>
+        <div class="module-slug">Analyse</div>
+      </div>
+      <div>
+        <div class="module-kicker">Digitaler Reifegrad · Bestandsaufnahme</div>
+        <div class="module-title">Analyse & Orientierung</div>
+        <p class="module-desc">Bevor etwas verändert wird, muss verstanden werden, wie der Betrieb heute tatsächlich funktioniert. Wir erfassen den digitalen Status quo: welche Informationen wo liegen, wie Prozesse in der Praxis ablaufen, wo Daten verloren gehen — und was davon den größten Einfluss auf den Betriebsalltag hat.</p>
+        <p class="module-desc">Das Ergebnis ist keine Konzeptstudie. Es ist eine klare Prioritätenliste: Was bringt den größten Nutzen bei der geringsten Komplexität — und was ist der nächste sinnvolle Schritt.</p>
+        <div class="module-tags">
+          <span class="tag">Prozess-Mapping</span>
+          <span class="tag">Datenfluss-Analyse</span>
+          <span class="tag">Schwachstellen-Identifikation</span>
+          <span class="tag">Reifegrad-Bewertung</span>
+        </div>
+      </div>
+      <div class="module-outcome">
+        <div class="outcome-label">Was danach klar ist</div>
+        <p>Wo steht der Betrieb digital? Welche drei Bereiche haben den größten Handlungsbedarf? Welche Maßnahmen sind realistisch umsetzbar — und welche lohnen sich wirklich.</p>
+      </div>
+    </div>
+
+    <div class="module-item reveal">
+      <div class="module-num">
+        <div class="module-badge">M · 1</div>
+        <div class="module-slug">Datenbasis</div>
+      </div>
+      <div>
+        <div class="module-kicker">Datenhub · eDMS · Wissensmanagement</div>
+        <div class="module-title">Schwachstellen digitalisieren — Daten sichtbar machen</div>
+        <p class="module-desc">Informationen, die heute in Excel-Dateien, Papierordnern, E-Mails oder Köpfen liegen, werden in eine zentrale, browserbasierte Plattform überführt. Qualitätsdaten, Prüfprotokolle, Fehlerkataloge, Betriebsereignisse — alles an einem Ort, durchsuchbar, nachvollziehbar.</p>
+        <p class="module-desc">KI-Funktionen unterstützen bei der Strukturierung, automatischen Verschlagwortung und intelligenten Suche. Mitarbeitende finden Informationen schnell — ohne Mehraufwand bei der Erfassung.</p>
+        <div class="module-tags">
+          <span class="tag">Zentraler Datenhub</span>
+          <span class="tag">eDMS</span>
+          <span class="tag">KI-Suche</span>
+          <span class="tag">Dashboards</span>
+          <span class="tag">Analytik</span>
+        </div>
+      </div>
+      <div class="module-outcome">
+        <div class="outcome-label">Was sich verändert</div>
+        <p>Informationen sind auffindbar. Prozesse sind dokumentiert. Neue Mitarbeitende arbeiten sich schneller ein. Entscheidungen basieren auf Daten — nicht auf Erinnerungen.</p>
+      </div>
+    </div>
+
+    <div class="module-item reveal">
+      <div class="module-num">
+        <div class="module-badge">M · 2</div>
+        <div class="module-slug">Produktion</div>
+      </div>
+      <div>
+        <div class="module-kicker">Qualitätssicherung · Live-Erfassung · Tracking</div>
+        <div class="module-title">Produktionsprozesse live erfassen & prüfen</div>
+        <p class="module-desc">Qualitätsprüfungen werden digital direkt am Prozess erfasst — mit Barcode-Scannern, mobilen Formularen oder Maschinendaten-Anbindung. Jede Charge, jeder Prüfschritt, jede Abweichung wird rückverfolgbar.</p>
+        <p class="module-desc">Für Betriebe mit Qualitätsnachweispflicht gegenüber Großkunden oder Zertifizierungsanforderungen ist das oft ein unmittelbarer und messbarer Wettbewerbsvorteil.</p>
+        <div class="module-tags">
+          <span class="tag">Digitale Qualitätsprotokolle</span>
+          <span class="tag">Barcode / QR</span>
+          <span class="tag">Chargen-Rückverfolgung</span>
+          <span class="tag">Live-Status</span>
+          <span class="tag">Maschinendaten</span>
+        </div>
+      </div>
+      <div class="module-outcome">
+        <div class="outcome-label">Was sich verändert</div>
+        <p>Vollständige Rückverfolgbarkeit. Qualitätsnachweise auf Knopfdruck. Abweichungen werden sofort sichtbar — nicht erst beim Kunden.</p>
+      </div>
+    </div>
+
+    <div class="module-item reveal">
+      <div class="module-num">
+        <div class="module-badge">M · 3</div>
+        <div class="module-slug">Smart Ops</div>
+      </div>
+      <div>
+        <div class="module-kicker">KI-Analyse · Predictive · Entscheidungsunterstützung</div>
+        <div class="module-title">Smart Operations — aus Daten werden Entscheidungen</div>
+        <p class="module-desc">Auf Basis der aufgebauten Datenbasis werden KI-Modelle eingesetzt, die Muster erkennen, Abweichungen frühzeitig signalisieren und konkrete Handlungsempfehlungen ableiten. Optional werden Sensordaten aus der Produktion in Echtzeit integriert.</p>
+        <p class="module-desc">Predictive Maintenance, automatische Frühwarnungen, priorisierte Maßnahmenvorschläge — die Plattform wird vom Dokumentationssystem zum aktiven Unterstützungswerkzeug für Führungskräfte und Schichtleiter.</p>
+        <div class="module-tags">
+          <span class="tag">KI-Mustererkennung</span>
+          <span class="tag">Frühwarnsystem</span>
+          <span class="tag">Predictive Maintenance</span>
+          <span class="tag">Sensorintegration</span>
+          <span class="tag">Decision Support</span>
+        </div>
+      </div>
+      <div class="module-outcome">
+        <div class="outcome-label">Was sich verändert</div>
+        <p>Störungen werden erkannt, bevor sie eintreten. Optimierungspotenziale werden automatisch identifiziert. Das System arbeitet aktiv mit — nicht nur im Hintergrund.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ÜBER UNS -->
+<section id="ueber-uns">
+  <div class="section-label reveal">Über uns</div>
+  <h2 class="section-title reveal reveal-delay-1">Klein. Direkt. Ohne Overhead.</h2>
+  <div class="about-grid">
+    <div class="about-text reveal reveal-delay-2">
+      <p>Wir sind ein kleines, spezialisiertes Team mit Hintergrund in industrieller IT, Softwareentwicklung und Prozessoptimierung. Kein Projektmanagement-Layer dazwischen, kein halbes Jahr Analysephase — ein Ansprechpartner vom ersten Gespräch bis zur fertigen Lösung.</p>
+      <p>Was uns von größeren Anbietern unterscheidet, ist nicht nur Geschwindigkeit. Es ist die Haltung: Wir entwickeln keine Standardprodukte, die auf einen Betrieb angepasst werden. Wir verstehen zuerst, wie Ihr Betrieb tatsächlich funktioniert — und bauen genau dafür.</p>
+      <p>Moderne KI-Werkzeuge ermöglichen uns, in Wochen umzusetzen, wofür klassische Entwicklung Monate braucht. Diesen Vorteil geben wir direkt weiter — in kürzeren Laufzeiten und realistischen Kosten.</p>
+    </div>
+    <div class="principles">
+      <div class="principle reveal reveal-delay-1">
+        <div class="p-num">01</div>
+        <div class="p-body">
+          <h4>Kein Vendor Lock-in</h4>
+          <p>Was entwickelt wird, gehört Ihnen. Keine proprietären Systeme, keine erzwungene Abhängigkeit von einem Anbieter.</p>
+        </div>
+      </div>
+      <div class="principle reveal reveal-delay-2">
+        <div class="p-num">02</div>
+        <div class="p-body">
+          <h4>Modular und erweiterbar</h4>
+          <p>Jedes Modul funktioniert eigenständig. Sie entscheiden, wo Sie anfangen — und wie weit Sie gehen.</p>
+        </div>
+      </div>
+      <div class="principle reveal reveal-delay-3">
+        <div class="p-num">03</div>
+        <div class="p-body">
+          <h4>Hochschulnähe & aktuelles Know-how</h4>
+          <p>Wir arbeiten eng mit Hochschulen und Forschungseinrichtungen zusammen und bringen aktuelles KI-Know-how direkt in den Betrieb.</p>
+        </div>
+      </div>
+      <div class="principle reveal reveal-delay-4">
+        <div class="p-num">04</div>
+        <div class="p-body">
+          <h4>Schnell und klar</h4>
+          <p>Erste Ergebnisse in zwei bis vier Wochen. Klare Kommunikation, keine Bürokratie, kein Overhead.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt" class="contact">
+  <div class="section-label reveal">Kontakt</div>
+  <h2 class="section-title reveal reveal-delay-1">Ein Gespräch — kein Angebot.</h2>
+  <div class="contact-grid">
+    <div class="contact-text reveal reveal-delay-2">
+      <p>Wenn Sie neugierig sind, wie dieser Ansatz für Ihren Betrieb aussehen könnte, sprechen wir gerne. Kein Pitch, keine Präsentation. Ein offenes Gespräch über Ihre aktuelle Situation — und ob wir sinnvoll helfen können.</p>
+      <p>Falls eine Zusammenarbeit Sinn ergibt, erhalten Sie innerhalb weniger Tage eine klare Einschätzung: was möglich ist, was es kostet, und wie lange es dauert.</p>
+    </div>
+    <div class="contact-rows reveal reveal-delay-3">
+      <div class="contact-row">
+        <span class="cr-label">E-Mail</span>
+        <span class="cr-value"><a href="mailto:kontakt@digit-kmu.de">kontakt@digit-kmu.de</a></span>
+      </div>
+      <div class="contact-row">
+        <span class="cr-label">Standort</span>
+        <span class="cr-value">Deutschland · Remote & vor Ort</span>
+      </div>
+      <div class="contact-row">
+        <span class="cr-label">Sprachen</span>
+        <span class="cr-value">Deutsch · Englisch · Russisch</span>
+      </div>
+      <div class="contact-row">
+        <span class="cr-label">Verfügbarkeit</span>
+        <span class="cr-value">Neue Projekte · Frühjahr 2025</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Digit.KMU — KI-gestützte Digitalisierung für Industrie-KMU</span>
+  <span>2025</span>
+</footer>
+
+<script>
+  // ── Scroll reveal with Intersection Observer ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ── Nav shrink on scroll ──
+  const nav = document.querySelector('nav');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ── Active nav link on scroll ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const activeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active',
+            link.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+  sections.forEach(s => activeObserver.observe(s));
+
+  // ── Hamburger / Mobile menu ──
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── Keyboard support for hamburger ──
+  hamburger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      hamburger.click();
+    }
+  });
+</script>
+
+</body>
+</html>
