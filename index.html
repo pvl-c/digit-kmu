@@ -386,6 +386,57 @@
     .outcome-label::before { content: '\25B8'; font-size: 0.58rem; }
     .module-outcome p { font-size: 0.93rem; color: var(--text); line-height: 1.82; }
 
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 500px;
+      background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .cta-banner-inner {
+      position: relative;
+      max-width: 640px; margin: 0 auto;
+    }
+    .cta-banner h2 {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      line-height: 1.15; color: var(--white);
+      letter-spacing: -0.01em; margin-bottom: 1.2rem;
+    }
+    .cta-banner h2 em { font-style: normal; color: var(--accent); }
+    .cta-banner p {
+      font-size: 1rem; color: var(--text2); line-height: 1.85;
+      margin-bottom: 2.5rem;
+    }
+    .cta-banner-btn {
+      display: inline-block;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 0.92rem; letter-spacing: 0.02em;
+      color: var(--bg); background: var(--accent);
+      border: none; padding: 1rem 2.8rem;
+      cursor: pointer; text-decoration: none;
+      transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+    }
+    .cta-banner-btn:hover {
+      box-shadow: 0 0 30px rgba(200,169,110,0.35);
+      transform: translateY(-1px);
+      background: var(--accent2);
+    }
+    .cta-banner-btn:active { transform: translateY(0); }
+    .cta-banner-meta {
+      margin-top: 1.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase;
+    }
+
     /* ── ABOUT ── */
     .about-grid {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -507,6 +558,7 @@
     <li><a href="#module">Module</a></li>
     <li><a href="#ueber-uns">Über uns</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
+    <li><a href="check.html" style="color:var(--accent);">Reifegrad-Check</a></li>
   </ul>
   <div class="hamburger" aria-label="Menü öffnen" role="button" tabindex="0">
     <span></span><span></span><span></span>
@@ -699,6 +751,18 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- CTA: REIFEGRAD-CHECK -->
+<section class="cta-banner reveal">
+  <div class="cta-banner-inner">
+    <div class="section-label" style="justify-content:center;">Kostenlos</div>
+    <h2>Wo steht Ihr Betrieb <em>digital?</em></h2>
+    <p>16 Fragen, keine Registrierung — Sie erhalten sofort eine klare Einschätzung
+       Ihres digitalen Reifegrads mit konkreten Empfehlungen.</p>
+    <a href="check.html" class="cta-banner-btn">Reifegrad-Check starten</a>
+    <div class="cta-banner-meta">~5 Minuten · 6 Bereiche · Sofort-Ergebnis</div>
   </div>
 </section>
 
