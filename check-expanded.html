@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industrie 4.0 Reifegrad-Analyse — Digit.KMU</title>
+  <meta name="description" content="Umfassende Industrie 4.0 Reifegrad-Analyse für produzierende KMU. Adaptiver Fragebogen, 8 Dimensionen, individueller Report mit konkreten Handlungsempfehlungen.">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230c0d0d'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23c8a96e'>D.</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0d0d;--bg2:#111213;--surface:#181a1b;--surface2:#1f2122;--border:#2c2f30;--border2:#3a3e3f;--text:#dedad4;--text2:#b8b4ae;--muted:#7a7872;--accent:#c8a96e;--accent2:#d4b87a;--white:#f0ede8;--green:#6ec87a;--yellow:#c8b86e;--red:#c86e6e;--blue:#6e9ec8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+::selection{background:rgba(200,169,110,.25);color:var(--white)}
+
+/* NAV */
+.ck-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 3.5rem;background:rgba(12,13,13,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.ck-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.05em;color:var(--white);text-decoration:none}
+.ck-logo span{color:var(--accent)}
+.ck-back{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .3s;display:flex;align-items:center;gap:.5rem}
+.ck-back:hover{color:var(--text2)}
+.ck-back::before{content:'\2190';font-size:.9rem}
+
+/* PROGRESS */
+.prog-wrap{position:fixed;top:54px;left:0;right:0;z-index:99;background:var(--bg);border-bottom:1px solid var(--border);transition:opacity .3s}
+.prog-track{height:2px;background:var(--border)}
+.prog-fill{height:2px;background:var(--accent);width:0%;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.prog-info{display:flex;justify-content:space-between;align-items:center;padding:.55rem 3.5rem}
+.prog-cat{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;display:flex;align-items:center;gap:.6rem}
+.prog-cat::before{content:'';width:14px;height:1px;background:var(--accent);opacity:.5}
+.prog-count{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.06em;color:var(--muted)}
+.prog-est{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);opacity:.7}
+
+/* APP */
+.app{min-height:100vh;padding-top:105px;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;min-height:calc(100vh - 105px)}
+.screen.active{display:flex}
+
+/* INTRO */
+.intro{justify-content:center;align-items:center;padding:3rem 3.5rem;text-align:center;position:relative}
+.intro-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:500px;background:radial-gradient(circle,rgba(200,169,110,.06) 0%,transparent 65%);pointer-events:none}
+.intro-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;border:1px solid rgba(200,169,110,.25);padding:.4rem 1rem;display:inline-block;margin-bottom:2.5rem;opacity:0;animation:fu .6s ease forwards .1s}
+.intro h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.08;letter-spacing:-.02em;color:var(--white);max-width:720px;opacity:0;animation:fu .6s ease forwards .2s}
+.intro h1 em{font-style:normal;color:var(--accent)}
+.intro-desc{margin-top:1.8rem;max-width:540px;font-size:1rem;font-weight:300;color:var(--text2);line-height:1.85;opacity:0;animation:fu .6s ease forwards .35s}
+.intro-dims{margin-top:3rem;display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;max-width:600px;opacity:0;animation:fu .6s ease forwards .45s}
+.intro-dim{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border2);padding:.3rem .7rem;text-transform:uppercase}
+.intro-start{margin-top:3rem;font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;letter-spacing:.02em;color:var(--bg);background:var(--accent);border:none;padding:1rem 3rem;cursor:pointer;transition:box-shadow .3s,transform .2s,background .3s;opacity:0;animation:fu .6s ease forwards .55s}
+.intro-start:hover{box-shadow:0 0 30px rgba(200,169,110,.35);transform:translateY(-1px);background:var(--accent2)}
+.intro-start:active{transform:translateY(0)}
+.intro-note{margin-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;opacity:0;animation:fu .6s ease forwards .6s}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* QUESTION */
+.q-screen{justify-content:center;padding:2.5rem 3.5rem;max-width:760px;margin:0 auto;width:100%}
+.q-wrap{opacity:0;transform:translateX(40px);transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .4s cubic-bezier(.16,1,.3,1)}
+.q-wrap.vis{opacity:1;transform:translateX(0)}
+.q-wrap.ex-l{opacity:0;transform:translateX(-40px)}
+.q-wrap.en-r{opacity:0;transform:translateX(40px)}
+.q-wrap.en-l{opacity:0;transform:translateX(-40px)}
+.q-cat-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem;padding:.3rem .6rem;border:1px solid rgba(200,169,110,.2);background:rgba(200,169,110,.04)}
+.q-num{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
+.q-text{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.3rem,2.5vw,1.75rem);line-height:1.28;color:var(--white);letter-spacing:-.01em;margin-bottom:.6rem}
+.q-hint{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:2rem;font-style:italic}
+.answers{display:flex;flex-direction:column;gap:.6rem}
+.a-btn{display:flex;align-items:flex-start;gap:1rem;width:100%;padding:1.1rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-left:2px solid transparent;color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;line-height:1.5;cursor:pointer;transition:all .25s;text-align:left}
+.a-btn:hover{background:var(--surface2);border-color:var(--border2);border-left-color:var(--accent);box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateX(4px)}
+.a-btn.sel{background:rgba(200,169,110,.08);border-color:var(--accent);border-left-color:var(--accent);color:var(--white);box-shadow:0 0 20px rgba(200,169,110,.1)}
+.a-idx{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.06em;color:var(--muted);min-width:16px;padding-top:.15rem;transition:color .25s}
+.a-btn:hover .a-idx,.a-btn.sel .a-idx{color:var(--accent)}
+.a-sub{display:block;font-size:.75rem;color:var(--muted);margin-top:.2rem;font-weight:300}
+.q-nav{margin-top:2rem;display:flex;justify-content:space-between;align-items:center}
+.q-back-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.06em;color:var(--muted);background:none;border:none;cursor:pointer;padding:.5rem 0;transition:color .3s;display:flex;align-items:center;gap:.4rem}
+.q-back-btn:hover{color:var(--text2)}
+.q-back-btn::before{content:'\2190'}
+.q-back-btn:disabled{opacity:0;pointer-events:none}
+
+/* REPORT */
+.rpt{padding:3rem 3.5rem 5rem;max-width:1000px;margin:0 auto;width:100%}
+.rpt-hdr{text-align:center;margin-bottom:4rem;opacity:0;animation:fu .7s ease forwards .1s}
+.rpt-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.rpt-badge::before,.rpt-badge::after{content:'';width:20px;height:1px;background:var(--accent);opacity:.4}
+.rpt h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.1;color:var(--white);letter-spacing:-.02em}
+.rpt-profile{font-size:.85rem;color:var(--text2);margin-top:.8rem}
+
+/* Score */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;opacity:0;animation:fu .7s ease forwards .25s}
+.radar-w{display:flex;justify-content:center;align-items:center}
+.radar-svg{width:100%;max-width:360px;height:auto}
+.sc-details{display:flex;flex-direction:column;gap:1.2rem}
+.sc-big{display:flex;align-items:baseline;gap:.5rem}
+.sc-big .pct{font-family:'Syne',sans-serif;font-weight:800;font-size:4.2rem;line-height:1;color:var(--white)}
+.sc-big .pct-s{font-family:'Syne',sans-serif;font-weight:700;font-size:1.6rem;color:var(--accent)}
+.sc-level{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:var(--accent)}
+.sc-desc{font-size:.92rem;color:var(--text2);line-height:1.8}
+.sc-acatech{margin-top:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted);padding:.3rem .6rem;border:1px solid var(--border);display:inline-block}
+
+/* Category detail */
+.cat-sec{margin-bottom:4rem;opacity:0;animation:fu .7s ease forwards .4s}
+.cat-sec-t{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:1.8rem;display:flex;align-items:center;gap:.6rem}
+.cat-sec-t::before{content:'';width:14px;height:1px;background:var(--accent);opacity:.5}
+.cat-r{display:grid;grid-template-columns:180px 1fr 50px 90px;gap:1.2rem;align-items:center;padding:1rem 0;border-bottom:1px solid var(--border)}
+.cat-r:first-of-type{border-top:1px solid var(--border)}
+.cat-nm{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;color:var(--white)}
+.cat-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.cat-fill{height:100%;border-radius:3px;width:0%;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.cat-pct{font-family:'IBM Plex Mono',monospace;font-size:.76rem;font-weight:500;color:var(--white);text-align:right}
+.cat-st{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;text-align:right}
+.cat-st.g{color:var(--green)}.cat-st.m{color:var(--yellow)}.cat-st.l{color:var(--red)}
+
+/* Strengths / Weaknesses */
+.sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:4rem;opacity:0;animation:fu .7s ease forwards .5s}
+.sw-card{background:var(--surface);border:1px solid var(--border2);padding:1.6rem 1.5rem}
+.sw-card-t{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.sw-card-t.str{color:var(--green)}.sw-card-t.wk{color:var(--red)}
+.sw-item{font-size:.88rem;color:var(--text2);padding:.5rem 0;border-bottom:1px solid var(--border);line-height:1.6}
+.sw-item:last-child{border:none}
+
+/* Recs */
+.rec-sec{margin-bottom:4rem;opacity:0;animation:fu .7s ease forwards .6s}
+.rec-card{background:var(--surface);border:1px solid var(--border2);border-left:2px solid var(--accent);padding:1.6rem 1.8rem;margin-bottom:.8rem;transition:box-shadow .3s,transform .3s}
+.rec-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.3);transform:translateY(-1px)}
+.rec-pri{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.rec-pri::before{content:'\25B8';font-size:.5rem}
+.rec-tt{font-family:'Syne',sans-serif;font-weight:600;font-size:1rem;color:var(--white);margin-bottom:.5rem}
+.rec-ds{font-size:.88rem;color:var(--text2);line-height:1.8}
+.rec-mod{display:inline-block;margin-top:.7rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:var(--bg);background:var(--accent);padding:.18rem .5rem}
+.rec-imp{display:inline-block;margin-top:.7rem;margin-left:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.06em;color:var(--muted);border:1px solid var(--border);padding:.18rem .5rem}
+
+/* CTA */
+.rpt-cta{text-align:center;padding:3.5rem 2rem;background:var(--surface);border:1px solid var(--border2);opacity:0;animation:fu .7s ease forwards .7s}
+.rpt-cta h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--white);margin-bottom:.7rem}
+.rpt-cta p{font-size:.9rem;color:var(--text2);max-width:480px;margin:0 auto 2rem;line-height:1.8}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.cta-pri{font-family:'Syne',sans-serif;font-weight:600;font-size:.85rem;color:var(--bg);background:var(--accent);border:none;padding:.85rem 2rem;cursor:pointer;text-decoration:none;transition:box-shadow .3s,transform .2s,background .3s}
+.cta-pri:hover{box-shadow:0 0 24px rgba(200,169,110,.3);transform:translateY(-1px);background:var(--accent2)}
+.cta-sec{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:var(--text2);background:none;border:1px solid var(--border2);padding:.85rem 1.8rem;cursor:pointer;text-decoration:none;transition:border-color .3s,color .3s}
+.cta-sec:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Footer */
+.ck-ft{padding:1.5rem 3.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.ck-ft span{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+
+/* Responsive */
+@media(max-width:900px){
+  .ck-nav{padding:1rem 1.8rem}
+  .prog-info{padding:.5rem 1.8rem}
+  .intro{padding:2rem 1.8rem}
+  .q-screen{padding:2rem 1.8rem}
+  .rpt{padding:2rem 1.8rem 4rem}
+  .score-grid{grid-template-columns:1fr;gap:2.5rem}
+  .radar-w{order:-1}
+  .cat-r{grid-template-columns:1fr;gap:.3rem}
+  .cat-r{display:flex;flex-wrap:wrap;gap:.3rem 1rem}
+  .cat-nm{width:100%}
+  .cat-track{flex:1;min-width:100%}
+  .cat-pct,.cat-st{text-align:left}
+  .sw-grid{grid-template-columns:1fr}
+  .ck-ft{padding:1.2rem 1.8rem;flex-direction:column;gap:.5rem;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav class="ck-nav">
+  <a href="index.html" class="ck-logo">Digit<span>.</span>KMU</a>
+  <a href="index.html" class="ck-back">Zur Startseite</a>
+</nav>
+
+<div class="prog-wrap" id="progWrap" style="opacity:0">
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-info">
+    <div class="prog-cat" id="progCat"></div>
+    <div style="display:flex;gap:1.5rem;align-items:center">
+      <div class="prog-est" id="progEst"></div>
+      <div class="prog-count" id="progCount"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <div class="screen intro active" id="scrIntro">
+    <div class="intro-glow"></div>
+    <div class="intro-badge">Adaptiv · Branchenspezifisch · Detailliert</div>
+    <h1>Industrie 4.0<br><em>Reifegrad-Analyse</em></h1>
+    <p class="intro-desc">
+      Ein adaptiver Fragebogen, der sich an Ihre Unternehmensgröße, Branche und
+      IT-Landschaft anpasst. Sie erhalten eine umfassende Analyse über 8 Dimensionen
+      — basierend auf etablierten Frameworks (VDMA, acatech, SIRI).
+    </p>
+    <div class="intro-dims">
+      <span class="intro-dim">Strategie</span>
+      <span class="intro-dim">Maschinenvernetzung</span>
+      <span class="intro-dim">Betriebsdaten & MES</span>
+      <span class="intro-dim">ERP & Aufträge</span>
+      <span class="intro-dim">Qualität & CAQ</span>
+      <span class="intro-dim">Instandhaltung</span>
+      <span class="intro-dim">IT & Sicherheit</span>
+      <span class="intro-dim">Mitarbeiter</span>
+    </div>
+    <button class="intro-start" id="btnStart">Analyse starten</button>
+    <div class="intro-note">~7 Min · 18–24 Fragen adaptiv · Sofort-Report</div>
+  </div>
+
+  <div class="screen q-screen" id="scrQ">
+    <div class="q-wrap" id="qWrap">
+      <div class="q-cat-badge" id="qCatBadge"></div>
+      <div class="q-num" id="qNum"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-hint" id="qHint"></div>
+      <div class="answers" id="qAnswers"></div>
+      <div class="q-nav">
+        <button class="q-back-btn" id="btnBack">Zurück</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen rpt" id="scrRpt">
+    <div class="rpt-hdr">
+      <div class="rpt-badge">Ihre Ergebnisse</div>
+      <h1>Industrie 4.0 Reifegrad-Report</h1>
+      <div class="rpt-profile" id="rptProfile"></div>
+    </div>
+    <div class="score-grid">
+      <div class="radar-w"><svg class="radar-svg" id="radar" viewBox="0 0 380 380"></svg></div>
+      <div class="sc-details">
+        <div class="sc-big"><span class="pct" id="scPct">0</span><span class="pct-s">%</span></div>
+        <div class="sc-level" id="scLevel"></div>
+        <div class="sc-desc" id="scDesc"></div>
+        <div class="sc-acatech" id="scAcatech"></div>
+      </div>
+    </div>
+    <div class="cat-sec"><div class="cat-sec-t">Ergebnisse nach Dimension</div><div id="catBars"></div></div>
+    <div class="sw-grid">
+      <div class="sw-card"><div class="sw-card-t str">&#9650; Stärken</div><div id="swStr"></div></div>
+      <div class="sw-card"><div class="sw-card-t wk">&#9660; Handlungsbedarf</div><div id="swWk"></div></div>
+    </div>
+    <div class="rec-sec"><div class="cat-sec-t">Empfehlungen & nächste Schritte</div><div id="recBox"></div></div>
+    <div class="rpt-cta">
+      <h3>Diese Analyse besprechen?</h3>
+      <p>Wir ordnen die Ergebnisse ein und zeigen, welche Schritte realistisch umsetzbar sind — kostenlos und unverbindlich.</p>
+      <div class="cta-btns">
+        <a href="mailto:kontakt@digit-kmu.de?subject=Reifegrad-Analyse%20besprechen" class="cta-pri">Gespräch vereinbaren</a>
+        <button class="cta-sec" id="btnRestart">Analyse wiederholen</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="ck-ft"><span>Digit.KMU — Industrie 4.0 Reifegrad-Analyse</span><span>2025</span></footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════════════════════
+const CATS = [
+  { id:'strat',  name:'Strategie & Organisation' },
+  { id:'conn',   name:'Maschinenvernetzung' },
+  { id:'bde',    name:'Betriebsdaten & MES' },
+  { id:'erp',    name:'ERP & Auftragsabwicklung' },
+  { id:'qual',   name:'Qualität & CAQ' },
+  { id:'maint',  name:'Instandhaltung' },
+  { id:'it',     name:'IT & Sicherheit' },
+  { id:'people', name:'Mitarbeiter & Kompetenz' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// QUESTIONS — adaptive graph
+// Each has: id, cat, text, hint?, answers[], condition?
+// answer.next = id | null (auto-next) | '__report'
+// answer.flag = sets state flag
+// ═══════════════════════════════════════════════════════════════
+const Q = [
+  // ── PROFILING (2) ──────────────────────────────────────
+  { id:'p_size', cat:'strat', text:'Wie viele Mitarbeitende hat Ihr Unternehmen?',
+    hint:'Dies hilft uns, die Fragen an Ihre Betriebsgröße anzupassen.',
+    answers:[
+      {text:'Unter 20', sub:'Kleinbetrieb', score:0, flag:'size_s'},
+      {text:'20 – 50', sub:'Kleines KMU', score:1, flag:'size_m'},
+      {text:'50 – 200', sub:'Mittelständler', score:2, flag:'size_l'},
+      {text:'Über 200', sub:'Größeres KMU', score:3, flag:'size_xl'},
+    ]},
+  { id:'p_branch', cat:'strat', text:'In welchem Bereich ist Ihr Unternehmen hauptsächlich tätig?',
+    answers:[
+      {text:'Metallverarbeitung / Maschinenbau', score:0, flag:'branch_metal'},
+      {text:'Kunststoff / Chemie / Pharma', score:0, flag:'branch_chem'},
+      {text:'Elektronik / Elektrotechnik', score:0, flag:'branch_elec'},
+      {text:'Sonstiges produzierendes Gewerbe', score:0, flag:'branch_other'},
+    ]},
+
+  // ── STRATEGIE (2-3) ───────────────────────────────────
+  { id:'s1', cat:'strat', text:'Gibt es in Ihrem Unternehmen eine definierte Digitalisierungsstrategie?',
+    hint:'Gemeint ist ein schriftlich fixierter Plan mit Zielen, Prioritäten und Zeitrahmen.',
+    answers:[
+      {text:'Nein, Digitalisierung wird nicht aktiv gesteuert', score:0, next:'s2'},
+      {text:'Es gibt Einzelinitiativen, aber keinen Gesamtplan', score:1, next:'s2'},
+      {text:'Ziele existieren, aber ohne strukturierte Umsetzung', score:2, next:'s1a'},
+      {text:'Ja — klare Roadmap mit Verantwortlichkeiten und Budget', score:3, next:'s1a'},
+    ]},
+  { id:'s1a', cat:'strat', text:'Wer ist für die Digitalisierung verantwortlich?',
+    condition: s => scored(s,'s1') >= 2,
+    answers:[
+      {text:'Geschäftsführung nebenbei', score:1},
+      {text:'IT-Leitung im Nebenamt', score:1},
+      {text:'Dedizierte Person oder Rolle', score:2},
+      {text:'Eigenes Team / CDO', score:3},
+    ]},
+  { id:'s2', cat:'strat', text:'Wie wird der Erfolg von Digitalisierungsmaßnahmen gemessen?',
+    answers:[
+      {text:'Gar nicht — es gibt keine Erfolgsmessung', score:0},
+      {text:'Bauchgefühl und Rückmeldungen', score:1},
+      {text:'Einzelne Kennzahlen, aber keine systematische Auswertung', score:2},
+      {text:'Klare KPIs werden regelmäßig erhoben und berichtet', score:3},
+    ]},
+
+  // ── MASCHINENVERNETZUNG (3-4) ──────────────────────────
+  { id:'c1', cat:'conn', text:'Wie viele Ihrer Produktionsmaschinen sind digital vernetzt?',
+    hint:'Vernetzt = Maschinendaten können digital ausgelesen werden (z.B. Status, Stückzahlen, Fehlermeldungen).',
+    answers:[
+      {text:'Keine — alle Maschinen laufen ohne digitale Anbindung', score:0, next:'c1a'},
+      {text:'Vereinzelt — weniger als 25%', score:1},
+      {text:'Teilweise — 25% bis 75%', score:2},
+      {text:'Überwiegend bis vollständig — über 75%', score:3, next:'c2'},
+    ]},
+  { id:'c1a', cat:'conn', text:'Wie alt ist der Großteil Ihres Maschinenparks?',
+    condition: s => scored(s,'c1') === 0,
+    answers:[
+      {text:'Überwiegend über 20 Jahre', sub:'Legacy ohne Schnittstellen', score:0},
+      {text:'Gemischt — 10 bis 20 Jahre', sub:'Teilweise nachrüstbar', score:1},
+      {text:'Überwiegend unter 10 Jahre', sub:'Meist mit Digitalschnittstelle', score:2},
+      {text:'Überwiegend moderne CNC / SPS', sub:'OPC-UA / MQTT fähig', score:3},
+    ]},
+  { id:'c2', cat:'conn', text:'Welche Kommunikationsprotokolle nutzen Ihre Maschinen?',
+    hint:'Falls Sie unsicher sind, wählen Sie die Antwort, die am ehesten zutrifft.',
+    answers:[
+      {text:'Keine bekannt / kein digitaler Anschluss', score:0},
+      {text:'Proprietäre Schnittstellen oder serielle Verbindungen (RS-232)', score:1},
+      {text:'Industrieprotokolle wie PROFINET, Modbus TCP oder EtherNet/IP', score:2},
+      {text:'Standardisiert: OPC-UA, MQTT oder vergleichbar', score:3},
+    ]},
+  { id:'c3', cat:'conn', text:'Können Sie den aktuellen Status Ihrer Maschinen in Echtzeit einsehen?',
+    hint:'Z.B. Läuft / Steht / Störung / Rüsten — digital auf einem Bildschirm.',
+    answers:[
+      {text:'Nein — nur durch Rundgang in der Halle', score:0},
+      {text:'Teilweise — für einzelne Maschinen über deren Display', score:1},
+      {text:'Ja, über ein zentrales Dashboard, aber nicht vollständig', score:2},
+      {text:'Ja, alle Maschinen live auf einem Shopfloor-Dashboard', score:3},
+    ]},
+
+  // ── BETRIEBSDATEN & MES (3) ───────────────────────────
+  { id:'b1', cat:'bde', text:'Wie werden Produktionsdaten erfasst (Auftragsstart, Stückzahlen, Stillstände)?',
+    hint:'BDE = Betriebsdatenerfassung, MDE = Maschinendatenerfassung.',
+    answers:[
+      {text:'Auf Papier (Laufkarten, Schichtprotokolle)', score:0},
+      {text:'Nachträglich in Excel am Schichtende', score:1},
+      {text:'Digital an BDE-Terminals (Barcode, Touch) am Arbeitsplatz', score:2},
+      {text:'Automatisch aus Maschinenanbindung (MDE) in Echtzeit', score:3},
+    ]},
+  { id:'b2', cat:'bde', text:'Wird die OEE (Gesamtanlageneffektivität) Ihrer Maschinen ermittelt?',
+    hint:'OEE = Verfügbarkeit × Leistung × Qualität — zentrale Kennzahl der Produktion.',
+    answers:[
+      {text:'Nein, OEE wird nicht ermittelt', score:0},
+      {text:'Manuell berechnet, z.B. in Excel — unregelmäßig', score:1},
+      {text:'Regelmäßig erhoben, aber nicht in Echtzeit', score:2},
+      {text:'Automatisch in Echtzeit berechnet und visualisiert', score:3},
+    ]},
+  { id:'b3', cat:'bde', text:'Ist ein MES (Manufacturing Execution System) im Einsatz?',
+    hint:'MES = Softwaresystem zur Steuerung und Überwachung der Produktion in Echtzeit.',
+    answers:[
+      {text:'Nein, kein MES vorhanden', score:0},
+      {text:'In Planung oder Evaluierung', score:1},
+      {text:'Ja, aber nur für Teilbereiche (z.B. nur BDE)', score:2},
+      {text:'Ja, vollintegriert mit Feinplanung, BDE und Qualität', score:3},
+    ]},
+
+  // ── ERP & AUFTRÄGE (2-3) ──────────────────────────────
+  { id:'e1', cat:'erp', text:'Welches ERP-System setzen Sie ein?',
+    answers:[
+      {text:'Kein ERP — Aufträge werden manuell / in Excel verwaltet', score:0, next:'e3'},
+      {text:'Einfaches System (z.B. Lexware, Sage, Branchenlösung)', score:1},
+      {text:'Mittelstand-ERP (proAlpha, abas, AP+, Dynamics)', score:2},
+      {text:'Umfassendes ERP (SAP B1, SAP S/4HANA, Infor)', score:3},
+    ]},
+  { id:'e2', cat:'erp', text:'Wie durchgängig ist der digitale Auftragsfluss — vom Kunden bis zur Fertigung?',
+    condition: s => scored(s,'e1') >= 1,
+    hint:'Medienbrüche = Daten werden manuell von einem System ins andere übertragen.',
+    answers:[
+      {text:'Viele Medienbrüche — Auftrag wird mehrfach abgetippt', score:0},
+      {text:'ERP erzeugt Fertigungsaufträge, aber Shopfloor ist Papier', score:1},
+      {text:'Aufträge fließen digital bis zur Maschine, Rückmeldung teilw. manuell', score:2},
+      {text:'Durchgängig digital — Auftrag, Fertigung, Rückmeldung, Versand', score:3},
+    ]},
+  { id:'e3', cat:'erp', text:'Können Sie die tatsächlichen Kosten eines Auftrags nachkalkulieren?',
+    hint:'Nachkalkulation = Vergleich von Plan- und Ist-Kosten (Material, Zeit, Ausschuss) pro Auftrag.',
+    answers:[
+      {text:'Nein — Kosten werden nur pauschal geschätzt', score:0},
+      {text:'Teilweise — Materialkosten ja, Fertigungszeiten nein', score:1},
+      {text:'Ja, aber mit viel manuellem Aufwand', score:2},
+      {text:'Ja, automatisch aus BDE/MES/ERP-Daten', score:3},
+    ]},
+
+  // ── QUALITÄT & CAQ (3-4) ──────────────────────────────
+  { id:'q1', cat:'qual', text:'Wie werden Qualitätsprüfungen in der Produktion dokumentiert?',
+    answers:[
+      {text:'Auf Papier oder gar nicht', score:0},
+      {text:'In Excel, nachträglich erfasst', score:1},
+      {text:'Digital am Prozess (Tablet, Scanner, Eingabemaske)', score:2},
+      {text:'Automatisch mit angebundenen Messmitteln oder Sensoren', score:3, next:'q1a'},
+    ]},
+  { id:'q1a', cat:'qual', text:'Nutzen Sie SPC (Statistische Prozesskontrolle) in der laufenden Fertigung?',
+    condition: s => scored(s,'q1') >= 3,
+    hint:'SPC = Echtzeit-Überwachung von Qualitätsmerkmalen mit Regelkarten.',
+    answers:[
+      {text:'Nein', score:0},
+      {text:'Ja, für ausgewählte kritische Merkmale', score:2},
+      {text:'Ja, breitflächig mit automatischer Alarmierung', score:3},
+    ]},
+  { id:'q2', cat:'qual', text:'Können Sie eine Charge lückenlos zurückverfolgen (Material → Prozess → Auslieferung)?',
+    answers:[
+      {text:'Nein, Rückverfolgbarkeit ist nicht gegeben', score:0},
+      {text:'Teilweise, mit großem manuellem Aufwand', score:1},
+      {text:'Ja, digital — aber mit einzelnen Lücken', score:2},
+      {text:'Ja, vollständig und automatisch', score:3},
+    ]},
+  { id:'q3', cat:'qual', text:'Ist Ihr Unternehmen nach einem Qualitätsstandard zertifiziert?',
+    answers:[
+      {text:'Nein', score:0},
+      {text:'ISO 9001', score:1},
+      {text:'Branchenspezifisch (IATF 16949, ISO 13485, AS9100)', score:2, flag:'cert_spec'},
+      {text:'Mehrere Zertifizierungen + integriertes Managementsystem', score:3, flag:'cert_multi'},
+    ]},
+
+  // ── INSTANDHALTUNG (2-3) ──────────────────────────────
+  { id:'m1', cat:'maint', text:'Welche Instandhaltungsstrategie verfolgen Sie hauptsächlich?',
+    answers:[
+      {text:'Reaktiv — repariert wird, wenn etwas ausfällt', score:0},
+      {text:'Zeitbasiert präventiv — feste Intervalle (z.B. alle 6 Monate)', score:1},
+      {text:'Zustandsbasiert — Wartung nach Messwerten (Vibration, Temperatur)', score:2, next:'m1a'},
+      {text:'Prädiktiv — KI-gestützte Vorhersage von Ausfällen', score:3, next:'m1a'},
+    ]},
+  { id:'m1a', cat:'maint', text:'Welche Condition-Monitoring-Verfahren setzen Sie ein?',
+    condition: s => scored(s,'m1') >= 2,
+    answers:[
+      {text:'Schwingungsanalyse (Vibration)', score:2},
+      {text:'Thermografie oder Ölanalyse', score:2},
+      {text:'Mehrere Verfahren kombiniert', score:3},
+      {text:'Integriertes System mit Sensorplattform und Dashboard', score:3},
+    ]},
+  { id:'m2', cat:'maint', text:'Werden Wartungshistorien und Störungsmeldungen digital erfasst?',
+    hint:'CMMS / IPS = Instandhaltungsplanungssystem.',
+    answers:[
+      {text:'Nein — Papier, Gedächtnis oder einzelne Notizen', score:0},
+      {text:'Teilweise in Excel oder E-Mail', score:1},
+      {text:'In einem einfachen CMMS / Ticketsystem', score:2},
+      {text:'Umfassendes CMMS mit Ersatzteil-, Kosten- und Zeitanalyse', score:3},
+    ]},
+
+  // ── IT & SICHERHEIT (2-3) ─────────────────────────────
+  { id:'i1', cat:'it', text:'Wie ist Ihre IT-Infrastruktur aufgebaut?',
+    answers:[
+      {text:'Einzelne Rechner, keine zentrale Verwaltung', score:0},
+      {text:'Lokaler Server, teilweise veraltete Systeme', score:1},
+      {text:'Zentrale IT mit aktuellem Netzwerk und Verwaltung', score:2},
+      {text:'Cloud- oder Hybrid-Infrastruktur, zentral gemanagt', score:3, next:'i1a'},
+    ]},
+  { id:'i1a', cat:'it', text:'Wo werden Ihre Produktionsdaten verarbeitet und gespeichert?',
+    condition: s => scored(s,'i1') >= 3,
+    answers:[
+      {text:'Lokal auf dem Maschinenrechner', score:1},
+      {text:'Auf einem On-Premise-Server', score:2},
+      {text:'Edge-Server vor Ort + Cloud für Analyse', score:3},
+      {text:'Vollständig cloudbasiert (SaaS)', score:3},
+    ]},
+  { id:'i2', cat:'it', text:'Wie wird IT-Sicherheit in Produktion und Büro gehandhabt?',
+    hint:'IT/OT-Konvergenz = Zusammenwachsen von Büro-IT und Produktions-Netzwerken.',
+    answers:[
+      {text:'Kein systematischer Schutz, kein Backup-Konzept', score:0},
+      {text:'Virenscanner und gelegentliche Backups', score:1},
+      {text:'Firewall, regelmäßige Backups, Netzwerksegmentierung', score:2},
+      {text:'Umfassendes Konzept mit Monitoring, Notfallplan und Schulungen', score:3},
+    ]},
+
+  // ── MITARBEITER (2-3) ─────────────────────────────────
+  { id:'h1', cat:'people', text:'Wie digital-affin sind Ihre Mitarbeitenden im Arbeitsalltag?',
+    answers:[
+      {text:'Die meisten arbeiten bevorzugt analog / papierbasiert', score:0},
+      {text:'Grundlegende PC- und Smartphone-Nutzung vorhanden', score:1},
+      {text:'Digitale Tools werden von den meisten akzeptiert und genutzt', score:2},
+      {text:'Hohe Kompetenz — Mitarbeitende treiben Digitalisierung mit voran', score:3},
+    ]},
+  { id:'h2', cat:'people', text:'Was passiert, wenn eine erfahrene Fachkraft das Unternehmen verlässt?',
+    hint:'Wissensmanagement = systematische Erfassung und Zugänglichkeit von Erfahrungswissen.',
+    answers:[
+      {text:'Viel Wissen geht verloren — es existiert nur in Köpfen', score:0},
+      {text:'Einarbeitung dauert lange, funktioniert über Kollegen', score:1},
+      {text:'Dokumentation vorhanden, aber nicht immer aktuell', score:2},
+      {text:'Wissen ist digital erfasst, durchsuchbar und zugänglich', score:3},
+    ]},
+  { id:'h3', cat:'people', text:'Gibt es systematische Weiterbildung zu digitalen Themen?',
+    condition: s => !s.flags.size_s,
+    answers:[
+      {text:'Nein, kein Angebot', score:0},
+      {text:'Vereinzelt, wenn sich eine Gelegenheit ergibt', score:1},
+      {text:'Gelegentliche Schulungen (z.B. bei Software-Einführung)', score:2},
+      {text:'Systematisch geplant mit Schulungsbudget und Zeitkontingent', score:3},
+    ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// RECOMMENDATIONS DATABASE
+// ═══════════════════════════════════════════════════════════════
+const RECS = {
+  strat: {
+    title: 'Digitalisierungsstrategie erarbeiten',
+    desc: 'Klare Ziele, Prioritäten und einen realistischen Fahrplan definieren. Verantwortlichkeiten festlegen und Erfolg durch KPIs messbar machen.',
+    module: 'M0', impact: 'Grundlage',
+    detail: 'Ohne Strategie bleiben Maßnahmen Stückwerk. Ein halbtägiger Workshop reicht oft, um die wichtigsten drei Handlungsfelder und den ersten Schritt zu identifizieren.'
+  },
+  conn: {
+    title: 'Maschinenvernetzung aufbauen',
+    desc: 'Kritische Maschinen digital anbinden — auch Altmaschinen über Retrofit-Gateways (OPC-UA, IoT Edge). Maschinenstatus und Basisdaten in Echtzeit verfügbar machen.',
+    module: 'M2', impact: 'Hoch',
+    detail: 'Bereits ein einfaches Ampel-Dashboard für Maschinenstatus reduziert Reaktionszeiten und macht Stillstände sichtbar, bevor sie sich summieren.'
+  },
+  bde: {
+    title: 'Betriebsdatenerfassung digitalisieren',
+    desc: 'Papierbasierte Laufkarten durch digitale BDE-Terminals ersetzen. Stückzahlen, Stillstände und Rüstzeiten automatisch erfassen. OEE-Berechnung automatisieren.',
+    module: 'M2', impact: 'Hoch',
+    detail: 'BDE ist oft der größte Quick-Win: Innerhalb von 2–4 Wochen umsetzbar, sofortige Transparenz über Produktivität und Engpässe.'
+  },
+  erp: {
+    title: 'ERP-Integration und Medienbrüche eliminieren',
+    desc: 'Durchgängigen digitalen Auftragsfluss vom Kundenauftrag bis zur Rückmeldung schaffen. Manuelle Datenübertragungen zwischen Systemen abschaffen.',
+    module: 'M1', impact: 'Hoch',
+    detail: 'Jeder Medienbruch kostet Zeit, erzeugt Fehler und verhindert Echtzeitfähigkeit. Schnittstellen zwischen ERP, MES und Shopfloor sind der Schlüssel.'
+  },
+  qual: {
+    title: 'Qualitätssicherung digital erfassen',
+    desc: 'Prüfprotokolle digital am Prozess erfassen. Chargen-Rückverfolgbarkeit aufbauen. Bei Bedarf SPC einführen für Echtzeit-Qualitätsüberwachung.',
+    module: 'M2', impact: 'Hoch',
+    detail: 'Für Betriebe mit Nachweispflicht gegenüber Großkunden (Automotive, Pharma) ist digitale QS oft ein unmittelbarer Wettbewerbsvorteil.'
+  },
+  maint: {
+    title: 'Instandhaltung systematisieren',
+    desc: 'Von reaktiver zu zustandsbasierter Wartung wechseln. Wartungshistorien digitalisieren, CMMS einführen. Bei kritischen Anlagen Condition Monitoring prüfen.',
+    module: 'M3', impact: 'Mittel',
+    detail: 'Schon das einfache Erfassen und Analysieren von Störungen zeigt die Hauptverursacher — und ermöglicht gezielte statt pauschaler Wartung.'
+  },
+  it: {
+    title: 'IT-Infrastruktur und Sicherheit stärken',
+    desc: 'Netzwerk segmentieren (IT/OT), Backup-Konzept umsetzen, Zugriffsrechte modernisieren. Grundlage für alle weiteren Digitalisierungsschritte.',
+    module: 'M0', impact: 'Grundlage',
+    detail: 'Gerade bei zunehmender Vernetzung steigt das Cyberrisiko. Ein strukturiertes Sicherheitskonzept ist Pflicht — nicht Kür.'
+  },
+  people: {
+    title: 'Digitale Kompetenzen und Wissensmanagement aufbauen',
+    desc: 'Kritisches Betriebswissen digital erfassen. Mitarbeitende gezielt schulen. Akzeptanz durch frühzeitige Einbindung und schnelle Erfolge schaffen.',
+    module: 'M1', impact: 'Mittel',
+    detail: 'Technologie ist nur so gut wie die Menschen, die sie nutzen. Schulung und Change-Management entscheiden über Erfolg oder Scheitern.'
+  },
+};
+
+// Maturity levels (VDMA/acatech aligned)
+const LEVELS = [
+  { min:0,  max:15,  name:'Stufe 0: Outsider', acatech:'Computerisierung', desc:'Ihr Betrieb arbeitet überwiegend analog. Digitale Systeme sind vereinzelt vorhanden, aber nicht vernetzt. Der erste Schritt: eine strukturierte Bestandsaufnahme und die Identifikation der drei Bereiche mit dem höchsten Handlungsdruck.' },
+  { min:16, max:33,  name:'Stufe 1: Beginner', acatech:'Konnektivität', desc:'Einzelne Insellösungen sind im Einsatz, aber es fehlt die Vernetzung. Daten werden manuell übertragen, Papier dominiert. Das Potenzial liegt in der Verbindung bestehender Systeme und dem Aufbau einer zentralen Datenbasis.' },
+  { min:34, max:50,  name:'Stufe 2: Intermediate', acatech:'Sichtbarkeit', desc:'Grundlegende Prozesse sind digitalisiert. Erste Echtzeit-Daten sind verfügbar. Jetzt geht es darum, diese Daten zu nutzen: Transparenz über Produktion, Qualität und Kosten zu schaffen — als Basis für datengetriebene Entscheidungen.' },
+  { min:51, max:67,  name:'Stufe 3: Experienced', acatech:'Transparenz', desc:'Ihr Betrieb nutzt Daten aktiv für Analyse und Steuerung. Systeme sind vernetzt, Prozesse weitgehend digital. Der nächste Schritt: von der Analyse zur Vorhersage — Predictive Maintenance, automatische Optimierung, KI-gestützte Entscheidungsunterstützung.' },
+  { min:68, max:83,  name:'Stufe 4: Expert', acatech:'Prognosefähigkeit', desc:'Daten, KI und Automatisierung sind fester Bestandteil des Arbeitsalltags. Prognosemodelle und Simulationen unterstützen Entscheidungen. Fokus: Skalierung, Feintuning und Nutzung neuer KI-Möglichkeiten.' },
+  { min:84, max:100, name:'Stufe 5: Top Performer', acatech:'Adaptivität', desc:'Ihr Betrieb gehört zu den digitalen Vorreitern im Mittelstand. Systeme optimieren sich teilweise selbst. Ihr Wettbewerbsvorteil: Geschwindigkeit, Transparenz und Anpassungsfähigkeit.' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let state = { answers: {}, flags: {}, path: [], idx: 0 };
+function scored(s, qid) { const a = s.answers[qid]; return a !== undefined ? Q.find(q=>q.id===qid).answers[a].score : -1; }
+function buildPath() {
+  const p = [];
+  for (const q of Q) {
+    if (q.condition && !q.condition(state)) continue;
+    p.push(q.id);
+  }
+  return p;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════════════
+const $=s=>document.querySelector(s);
+const scrI=$('#scrIntro'), scrQ=$('#scrQ'), scrR=$('#scrRpt');
+const progW=$('#progWrap'), progF=$('#progFill'), progC=$('#progCat'), progN=$('#progCount'), progE=$('#progEst');
+const qW=$('#qWrap'), qCB=$('#qCatBadge'), qN=$('#qNum'), qT=$('#qText'), qH=$('#qHint'), qA=$('#qAnswers');
+
+function showScr(el){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));el.classList.add('active');window.scrollTo(0,0);}
+
+$('#btnStart').onclick=()=>{ state={answers:{},flags:{},path:buildPath(),idx:0}; showScr(scrQ); progW.style.opacity='1'; renderQ('en-r'); };
+$('#btnRestart').onclick=()=>{ state={answers:{},flags:{},path:[],idx:0}; showScr(scrI); progW.style.opacity='0'; };
+$('#btnBack').onclick=()=>{ if(state.idx>0){state.idx--;renderQ('en-l');} };
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER QUESTION
+// ═══════════════════════════════════════════════════════════════
+function renderQ(dir='en-r') {
+  // Rebuild path dynamically based on current answers
+  state.path = buildPath();
+  if (state.idx >= state.path.length) { showReport(); return; }
+
+  const qid = state.path[state.idx];
+  const q = Q.find(x=>x.id===qid);
+  const cat = CATS.find(c=>c.id===q.cat);
+
+  qW.classList.remove('vis'); qW.classList.add(dir==='en-r'?'ex-l':'en-r');
+
+  setTimeout(()=>{
+    // Progress
+    const pct = ((state.idx+1)/state.path.length*100);
+    progF.style.width = pct+'%';
+    progC.textContent = cat.name;
+    progN.textContent = (state.idx+1)+' / '+state.path.length;
+    const remaining = state.path.length - state.idx;
+    progE.textContent = '~'+Math.max(1,Math.round(remaining*0.35))+' min';
+
+    // Content
+    qCB.textContent = cat.name;
+    qN.textContent = 'Frage '+(state.idx+1)+' von '+state.path.length;
+    qT.textContent = q.text;
+    qH.textContent = q.hint||'';
+    qH.style.display = q.hint?'block':'none';
+
+    // Answers
+    qA.innerHTML='';
+    q.answers.forEach((a,i)=>{
+      const btn=document.createElement('button');
+      btn.className='a-btn'+(state.answers[qid]===i?' sel':'');
+      let html='<span class="a-idx">'+String.fromCharCode(65+i)+'</span><span>'+a.text;
+      if(a.sub) html+='<span class="a-sub">'+a.sub+'</span>';
+      html+='</span>';
+      btn.innerHTML=html;
+      btn.onclick=()=>selectA(qid,i,a);
+      qA.appendChild(btn);
+    });
+
+    $('#btnBack').disabled = state.idx===0;
+
+    qW.classList.remove('ex-l','en-r','en-l');
+    qW.classList.add(dir);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      qW.classList.remove(dir); qW.classList.add('vis');
+    }));
+  },180);
+}
+
+function selectA(qid, idx, a) {
+  state.answers[qid] = idx;
+  if(a.flag) state.flags[a.flag]=true;
+
+  qA.querySelectorAll('.a-btn').forEach((b,i)=>b.classList.toggle('sel',i===idx));
+
+  setTimeout(()=>{
+    // Determine next question
+    if(a.next==='__report'){ showReport(); return; }
+    state.idx++;
+    // Rebuild path to account for newly set flags/conditions
+    state.path = buildPath();
+    if(state.idx>=state.path.length){ showReport(); return; }
+    renderQ('en-r');
+  },300);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCORING & REPORT
+// ═══════════════════════════════════════════════════════════════
+function calcScores() {
+  const cs={};
+  CATS.forEach(c=>{cs[c.id]={total:0,max:0,count:0};});
+  state.path.forEach(qid=>{
+    const q=Q.find(x=>x.id===qid);
+    if(!q) return;
+    const ansIdx=state.answers[qid];
+    const maxScore = Math.max(...q.answers.map(a=>a.score));
+    cs[q.cat].max += maxScore;
+    cs[q.cat].count++;
+    if(ansIdx!==undefined) cs[q.cat].total += q.answers[ansIdx].score;
+  });
+  let gt=0,gm=0;
+  const res={};
+  CATS.forEach(c=>{
+    const s=cs[c.id];
+    const pct=s.max>0?Math.round(s.total/s.max*100):0;
+    res[c.id]={score:s.total,max:s.max,pct,count:s.count};
+    gt+=s.total; gm+=s.max;
+  });
+  res._overall=gm>0?Math.round(gt/gm*100):0;
+  return res;
+}
+
+function showReport() {
+  progW.style.opacity='0';
+  showScr(scrR);
+  const sc=calcScores();
+  const ov=sc._overall;
+
+  // Profile
+  const sizeMap={size_s:'< 20 MA',size_m:'20–50 MA',size_l:'50–200 MA',size_xl:'> 200 MA'};
+  const brMap={branch_metal:'Metallverarbeitung / Maschinenbau',branch_chem:'Kunststoff / Chemie / Pharma',branch_elec:'Elektronik / Elektrotechnik',branch_other:'Produzierendes Gewerbe'};
+  let profile='';
+  for(const k in sizeMap) if(state.flags[k]) profile+=sizeMap[k];
+  for(const k in brMap) if(state.flags[k]) profile+=' · '+brMap[k];
+  profile+=' · '+state.path.length+' Fragen beantwortet';
+  $('#rptProfile').textContent=profile;
+
+  // Score
+  animNum($('#scPct'),0,ov,1200);
+  const lv=LEVELS.find(l=>ov>=l.min&&ov<=l.max)||LEVELS[0];
+  $('#scLevel').textContent=lv.name;
+  $('#scDesc').textContent=lv.desc;
+  $('#scAcatech').textContent='acatech-Stufe: '+lv.acatech;
+
+  // Category bars
+  const cb=$('#catBars'); cb.innerHTML='';
+  CATS.forEach(c=>{
+    const p=sc[c.id].pct;
+    if(sc[c.id].count===0) return; // skip categories with no questions
+    const st=p>=67?'g':p>=34?'m':'l';
+    const stT=p>=67?'Gut':p>=34?'Mittel':'Handlungsbedarf';
+    const col=p>=67?'var(--green)':p>=34?'var(--yellow)':'var(--red)';
+    const r=document.createElement('div');r.className='cat-r';
+    r.innerHTML='<div class="cat-nm">'+c.name+'</div><div class="cat-track"><div class="cat-fill" style="background:'+col+'"></div></div><div class="cat-pct">'+p+'%</div><div class="cat-st '+st+'">'+stT+'</div>';
+    cb.appendChild(r);
+    setTimeout(()=>{r.querySelector('.cat-fill').style.width=p+'%';},500);
+  });
+
+  // Strengths / Weaknesses
+  const sorted=CATS.filter(c=>sc[c.id].count>0).slice().sort((a,b)=>sc[b.id].pct-sc[a.id].pct);
+  const strDiv=$('#swStr'); strDiv.innerHTML='';
+  const wkDiv=$('#swWk'); wkDiv.innerHTML='';
+  sorted.forEach(c=>{
+    const p=sc[c.id].pct;
+    const div=document.createElement('div');div.className='sw-item';
+    div.textContent=c.name+' — '+p+'%';
+    if(p>=50) strDiv.appendChild(div); else wkDiv.appendChild(div);
+  });
+  if(!strDiv.children.length) strDiv.innerHTML='<div class="sw-item" style="color:var(--muted)">Keine Bereiche über 50%</div>';
+  if(!wkDiv.children.length) wkDiv.innerHTML='<div class="sw-item" style="color:var(--muted)">Kein akuter Handlungsbedarf identifiziert</div>';
+
+  // Recommendations sorted by weakness
+  const rDiv=$('#recBox'); rDiv.innerHTML='';
+  const weakest=CATS.filter(c=>sc[c.id].count>0).slice().sort((a,b)=>sc[a.id].pct-sc[b.id].pct);
+  weakest.forEach((c,i)=>{
+    const p=sc[c.id].pct;
+    if(p>=80) return;
+    const rec=RECS[c.id]; if(!rec) return;
+    const pri=i===0?'Höchste Priorität':i===1?'Empfohlen':'Sinnvoll';
+    const card=document.createElement('div');card.className='rec-card';
+    card.innerHTML='<div class="rec-pri">'+pri+'</div><div class="rec-tt">'+rec.title+'</div><div class="rec-ds">'+rec.desc+'</div><div class="rec-ds" style="margin-top:.5rem;font-size:.82rem;color:var(--muted)">'+rec.detail+'</div><div><span class="rec-mod">'+rec.module+'</span><span class="rec-imp">Impact: '+rec.impact+'</span></div>';
+    rDiv.appendChild(card);
+  });
+
+  // Radar
+  drawRadar(sc);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RADAR CHART
+// ═══════════════════════════════════════════════════════════════
+function drawRadar(sc) {
+  const svg=$('#radar'); svg.innerHTML='';
+  const cx=190,cy=190,R=140;
+  const cats=CATS.filter(c=>sc[c.id].count>0);
+  const n=cats.length;
+  function pt(i,r){const a=Math.PI*2*i/n-Math.PI/2;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+
+  [.25,.5,.75,1].forEach(f=>{
+    const pts=[];for(let i=0;i<n;i++)pts.push(pt(i,R*f));
+    const p=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    p.setAttribute('points',pts.map(x=>x.join(',')).join(' '));
+    p.setAttribute('fill','none');p.setAttribute('stroke','#2c2f30');p.setAttribute('stroke-width','0.8');
+    svg.appendChild(p);
+  });
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,R);
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',cx);l.setAttribute('y1',cy);l.setAttribute('x2',x);l.setAttribute('y2',y);
+    l.setAttribute('stroke','#2c2f30');l.setAttribute('stroke-width','0.5');svg.appendChild(l);
+  }
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,R+28);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+    t.setAttribute('dominant-baseline','middle');t.setAttribute('fill','#7a7872');
+    t.setAttribute('font-family','IBM Plex Mono,monospace');t.setAttribute('font-size','8.5');
+    t.setAttribute('letter-spacing','0.3');
+    // Abbreviate long names
+    const nm=cats[i].name.split(' ')[0];
+    t.textContent=nm.length>12?nm.substring(0,10)+'..':nm;
+    svg.appendChild(t);
+  }
+  const dp=cats.map((c,i)=>{const p=sc[c.id].pct/100;return pt(i,R*Math.max(p,.04));});
+  const fp=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  fp.setAttribute('points',dp.map(x=>x.join(',')).join(' '));
+  fp.setAttribute('fill','rgba(200,169,110,.12)');fp.setAttribute('stroke','#c8a96e');fp.setAttribute('stroke-width','1.5');
+  fp.style.opacity='0';fp.style.transition='opacity .8s ease .3s';svg.appendChild(fp);
+  dp.forEach(([x,y])=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r','4');c.setAttribute('fill','#c8a96e');
+    c.style.opacity='0';c.style.transition='opacity .6s ease .6s';svg.appendChild(c);
+  });
+  requestAnimationFrame(()=>{fp.style.opacity='1';svg.querySelectorAll('circle').forEach(c=>{c.style.opacity='1';});});
+}
+
+function animNum(el,from,to,dur){const st=performance.now();function tick(now){const p=Math.min((now-st)/dur,1);el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);}
+</script>
+</body>
+</html>
