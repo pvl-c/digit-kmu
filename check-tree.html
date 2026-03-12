@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entscheidungsbaum — Industrie 4.0 Reifegrad-Analyse — Digit.KMU</title>
+  <meta name="description" content="Interaktive Visualisierung des adaptiven Fragebogens der Industrie 4.0 Reifegrad-Analyse. Alle Fragen, Verzweigungen und Bedingungen auf einen Blick.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230c0d0d'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23c8a96e'>D.</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0d0d;--bg2:#111213;--surface:#181a1b;--surface2:#1f2122;--border:#2c2f30;--border2:#3a3e3f;--text:#dedad4;--text2:#b8b4ae;--muted:#7a7872;--accent:#c8a96e;--accent2:#d4b87a;--white:#f0ede8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+::selection{background:rgba(200,169,110,.25);color:var(--white)}
+
+/* NAV */
+.ck-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 3.5rem;background:rgba(12,13,13,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.ck-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.05em;color:var(--white);text-decoration:none}
+.ck-logo span{color:var(--accent)}
+.ck-back{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .3s;display:flex;align-items:center;gap:.5rem}
+.ck-back:hover{color:var(--text2)}
+.ck-back::before{content:'\2190';font-size:.9rem}
+
+/* HEADER */
+.tree-hdr{padding:6rem 3.5rem 2rem;text-align:center;position:relative}
+.tree-hdr::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(circle,rgba(200,169,110,.05) 0%,transparent 65%);pointer-events:none}
+.tree-hdr h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.5rem,3.5vw,2.4rem);line-height:1.12;color:var(--white);letter-spacing:-.02em}
+.tree-hdr h1 em{font-style:normal;color:var(--accent)}
+.tree-hdr p{margin-top:.8rem;font-size:.92rem;color:var(--text2);max-width:560px;margin-left:auto;margin-right:auto}
+.tree-hdr .hint{margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+/* TREE CONTAINER */
+#tree-wrap{position:relative;width:100%;height:calc(100vh - 200px);min-height:500px;overflow:hidden;cursor:grab;background:var(--bg)}
+#tree-wrap.grabbing{cursor:grabbing}
+#tree-wrap svg{width:100%;height:100%;display:block}
+
+/* SVG STYLES */
+.cat-band{opacity:0;animation:bandIn .8s ease forwards}
+@keyframes bandIn{to{opacity:1}}
+.cat-band-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;fill-opacity:.6}
+.cat-band-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;fill-opacity:.3;text-transform:uppercase}
+
+.edge-path{fill:none;stroke-width:1.5;stroke-linecap:round;opacity:0;animation:edgeIn .6s ease forwards}
+@keyframes edgeIn{to{opacity:1}}
+.edge-path.dashed{stroke-dasharray:6 4}
+.edge-path.skip{stroke-opacity:.4}
+.edge-label-bg{fill:var(--bg);opacity:.85}
+.edge-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em;fill-opacity:.6}
+
+.node{cursor:pointer;opacity:0;animation:nodeIn .5s ease forwards}
+@keyframes nodeIn{to{opacity:1}}
+.node-bg{transition:all .25s ease}
+.node:hover .node-bg{filter:brightness(1.3);stroke-width:2}
+.node-id-text{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;fill-opacity:.5}
+.node-label{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:500;fill:var(--text)}
+.node-cond-icon{font-family:'IBM Plex Mono',monospace;font-size:9px;fill-opacity:.45}
+
+.node-start .node-bg,.node-end .node-bg{rx:20}
+.node-start .node-label,.node-end .node-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;fill:var(--bg)}
+
+/* DETAIL PANEL */
+#detail{position:fixed;top:54px;right:0;bottom:0;width:380px;max-width:90vw;background:rgba(17,18,19,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--border);z-index:90;transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);overflow-y:auto;padding:2rem 1.8rem 3rem}
+#detail.open{transform:translateX(0)}
+#detail-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;padding:.3rem;transition:color .2s}
+#detail-close:hover{color:var(--white)}
+
+.dt-cat{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .6rem;border:1px solid rgba(200,169,110,.25);display:inline-block;margin-bottom:.8rem}
+.dt-id{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.5rem}
+.dt-q{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;line-height:1.3;color:var(--white);margin-bottom:.6rem}
+.dt-hint{font-size:.82rem;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:1.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.dt-cond{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--accent);margin-bottom:1.2rem;padding:.5rem .8rem;background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.15)}
+.dt-cond::before{content:'Bedingung: ';opacity:.6}
+.dt-answers-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem}
+.dt-answer{padding:.7rem .9rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;margin-bottom:.4rem;font-size:.85rem;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem}
+.dt-answer .a-text{flex:1}
+.dt-answer .a-sub{display:block;font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.dt-answer .a-score{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);white-space:nowrap;padding:.15rem .4rem;border:1px solid var(--border);min-width:32px;text-align:center}
+.dt-answer .a-flag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--accent);background:rgba(200,169,110,.08);padding:.1rem .4rem;margin-top:.3rem}
+.dt-answer .a-next{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:#6e9ec8;background:rgba(110,158,200,.08);padding:.1rem .4rem;margin-top:.3rem;margin-left:.3rem}
+
+/* LEGEND */
+#legend{position:fixed;bottom:1.5rem;left:1.5rem;background:rgba(17,18,19,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);padding:.6rem .8rem;z-index:80;font-size:.65rem;max-width:220px;transition:all .3s ease}
+#legend.collapsed{padding:.4rem .6rem}
+#legend.collapsed .leg-body{display:none}
+#legend h3{font-family:'Syne',sans-serif;font-weight:600;font-size:.68rem;color:var(--white);margin-bottom:.4rem;letter-spacing:.02em;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+#legend h3::after{content:'▾';font-size:.6rem;color:var(--muted);transition:transform .3s}
+#legend.collapsed h3{margin-bottom:0}
+#legend.collapsed h3::after{transform:rotate(-90deg)}
+.leg-item{display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem;color:var(--text2);font-size:.62rem}
+.leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.leg-divider{height:1px;background:var(--border);margin:.4rem 0}
+.leg-type{display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem;color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:.58rem}
+.leg-line{width:16px;height:2px;flex-shrink:0}
+.leg-line.solid{background:var(--text2)}
+.leg-line.dashed{background:repeating-linear-gradient(90deg,var(--text2) 0,var(--text2) 4px,transparent 4px,transparent 7px)}
+
+/* ZOOM CONTROLS */
+#zoom-ctrl{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.3rem;z-index:80}
+#zoom-ctrl button{width:36px;height:36px;background:rgba(17,18,19,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+#zoom-ctrl button:hover{background:var(--surface2);color:var(--white);border-color:var(--border2)}
+
+/* FOOTER */
+.ck-ft{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3.5rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .ck-nav{padding:1rem 1.5rem}
+  .tree-hdr{padding:5rem 1.5rem 1.5rem}
+  #detail{width:100%;max-width:100%}
+  #legend{bottom:auto;top:54px;left:0;right:0;max-width:100%;display:flex;flex-wrap:wrap;gap:.5rem;padding:.6rem 1rem;border-left:none;border-right:none;border-top:none}
+  #legend h3{width:100%}
+  .leg-divider{display:none}
+  .leg-type{display:none}
+  #zoom-ctrl{bottom:1rem;right:1rem}
+  .ck-ft{padding:1rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="ck-nav">
+  <a href="index.html" class="ck-logo">Digit.<span>KMU</span></a>
+  <a href="check-expanded.html" class="ck-back">Zur Tiefenanalyse</a>
+</nav>
+
+<div class="tree-hdr">
+  <h1>Adaptiver <em>Entscheidungsbaum</em></h1>
+  <p>Alle 31 Fragen und Verzweigungen der Industrie 4.0 Reifegrad-Analyse auf einen Blick. Klicken Sie auf einen Knoten, um Details zu sehen.</p>
+  <div class="hint">Scrollen zum Zoomen &middot; Ziehen zum Verschieben &middot; Klick auf Knoten = Details</div>
+</div>
+
+<div id="tree-wrap">
+  <svg id="tree" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<div id="detail">
+  <button id="detail-close">&times;</button>
+  <div id="detail-content"></div>
+</div>
+
+<div id="legend" class="collapsed">
+  <h3 id="leg-toggle">Legende</h3>
+  <div class="leg-body">
+    <div id="leg-cats"></div>
+    <div class="leg-divider"></div>
+    <div class="leg-type"><span class="leg-line solid"></span> Standardpfad</div>
+    <div class="leg-type"><span class="leg-line dashed"></span> Bedingter Pfad / Skip</div>
+  </div>
+</div>
+
+<div id="zoom-ctrl">
+  <button id="z-in" title="Hineinzoomen">+</button>
+  <button id="z-out" title="Herauszoomen">&minus;</button>
+  <button id="z-fit" title="Gesamtansicht">&#8634;</button>
+</div>
+
+<footer class="ck-ft"><span>Digit.KMU — Entscheidungsbaum</span><span>2025</span></footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CATEGORY COLORS
+// ═══════════════════════════════════════════════════════════════
+const CC = {
+  strat:  '#c8a96e',
+  conn:   '#6e9ec8',
+  bde:    '#6ec87a',
+  erp:    '#c8b86e',
+  qual:   '#c86e9e',
+  maint:  '#c8886e',
+  it:     '#9e6ec8',
+  people: '#6ec8b8'
+};
+const CN = {
+  strat:  'Strategie & Organisation',
+  conn:   'Maschinenvernetzung',
+  bde:    'Betriebsdaten & MES',
+  erp:    'ERP & Auftragsabwicklung',
+  qual:   'Qualität & CAQ',
+  maint:  'Instandhaltung',
+  it:     'IT & Sicherheit',
+  people: 'Mitarbeiter & Kompetenz'
+};
+
+// ═══════════════════════════════════════════════════════════════
+// QUESTION DATA (for detail panel)
+// ═══════════════════════════════════════════════════════════════
+const QD = {
+  p_size: {
+    cat:'strat', text:'Wie viele Mitarbeitende hat Ihr Unternehmen?',
+    hint:'Dies hilft uns, die Fragen an Ihre Betriebsgröße anzupassen.',
+    cond:null,
+    answers:[
+      {t:'Unter 20',s:'Kleinbetrieb',score:0,flag:'size_s'},
+      {t:'20 – 50',s:'Kleines KMU',score:1,flag:'size_m'},
+      {t:'50 – 200',s:'Mittelständler',score:2,flag:'size_l'},
+      {t:'Über 200',s:'Größeres KMU',score:3,flag:'size_xl'},
+    ]},
+  p_branch: {
+    cat:'strat', text:'In welchem Bereich ist Ihr Unternehmen hauptsächlich tätig?',
+    cond:null,
+    answers:[
+      {t:'Metallverarbeitung / Maschinenbau',score:0,flag:'branch_metal'},
+      {t:'Kunststoff / Chemie / Pharma',score:0,flag:'branch_chem'},
+      {t:'Elektronik / Elektrotechnik',score:0,flag:'branch_elec'},
+      {t:'Sonstiges produzierendes Gewerbe',score:0,flag:'branch_other'},
+    ]},
+  s1: {
+    cat:'strat', text:'Gibt es in Ihrem Unternehmen eine definierte Digitalisierungsstrategie?',
+    hint:'Gemeint ist ein schriftlich fixierter Plan mit Zielen, Prioritäten und Zeitrahmen.',
+    cond:null,
+    answers:[
+      {t:'Nein, Digitalisierung wird nicht aktiv gesteuert',score:0,next:'s2'},
+      {t:'Es gibt Einzelinitiativen, aber keinen Gesamtplan',score:1,next:'s2'},
+      {t:'Ziele existieren, aber ohne strukturierte Umsetzung',score:2,next:'s1a'},
+      {t:'Ja — klare Roadmap mit Verantwortlichkeiten und Budget',score:3,next:'s1a'},
+    ]},
+  s1a: {
+    cat:'strat', text:'Wer ist für die Digitalisierung verantwortlich?',
+    cond:'scored(s1) ≥ 2',
+    answers:[
+      {t:'Geschäftsführung nebenbei',score:1},
+      {t:'IT-Leitung im Nebenamt',score:1},
+      {t:'Dedizierte Person oder Rolle',score:2},
+      {t:'Eigenes Team / CDO',score:3},
+    ]},
+  s2: {
+    cat:'strat', text:'Wie wird der Erfolg von Digitalisierungsmaßnahmen gemessen?',
+    cond:null,
+    answers:[
+      {t:'Gar nicht — es gibt keine Erfolgsmessung',score:0},
+      {t:'Bauchgefühl und Rückmeldungen',score:1},
+      {t:'Einzelne Kennzahlen, aber keine systematische Auswertung',score:2},
+      {t:'Klare KPIs werden regelmäßig erhoben und berichtet',score:3},
+    ]},
+  c1: {
+    cat:'conn', text:'Wie viele Ihrer Produktionsmaschinen sind digital vernetzt?',
+    hint:'Vernetzt = Maschinendaten können digital ausgelesen werden (Status, Stückzahlen, Fehlermeldungen).',
+    cond:null,
+    answers:[
+      {t:'Keine — alle Maschinen laufen ohne digitale Anbindung',score:0,next:'c1a'},
+      {t:'Vereinzelt — weniger als 25%',score:1},
+      {t:'Teilweise — 25% bis 75%',score:2},
+      {t:'Überwiegend bis vollständig — über 75%',score:3,next:'c2'},
+    ]},
+  c1a: {
+    cat:'conn', text:'Wie alt ist der Großteil Ihres Maschinenparks?',
+    cond:'scored(c1) = 0',
+    answers:[
+      {t:'Überwiegend über 20 Jahre',s:'Legacy ohne Schnittstellen',score:0},
+      {t:'Gemischt — 10 bis 20 Jahre',s:'Teilweise nachrüstbar',score:1},
+      {t:'Überwiegend unter 10 Jahre',s:'Meist mit Digitalschnittstelle',score:2},
+      {t:'Überwiegend moderne CNC / SPS',s:'OPC-UA / MQTT fähig',score:3},
+    ]},
+  c2: {
+    cat:'conn', text:'Welche Kommunikationsprotokolle nutzen Ihre Maschinen?',
+    hint:'Falls Sie unsicher sind, wählen Sie die Antwort, die am ehesten zutrifft.',
+    cond:'scored(c1) = 3 (via next)',
+    answers:[
+      {t:'Keine bekannt / kein digitaler Anschluss',score:0},
+      {t:'Proprietäre Schnittstellen oder serielle Verbindungen (RS-232)',score:1},
+      {t:'Industrieprotokolle wie PROFINET, Modbus TCP oder EtherNet/IP',score:2},
+      {t:'Standardisiert: OPC-UA, MQTT oder vergleichbar',score:3},
+    ]},
+  c3: {
+    cat:'conn', text:'Können Sie den aktuellen Status Ihrer Maschinen in Echtzeit einsehen?',
+    hint:'Z.B. Läuft / Steht / Störung / Rüsten — digital auf einem Bildschirm.',
+    cond:null,
+    answers:[
+      {t:'Nein — nur durch Rundgang in der Halle',score:0},
+      {t:'Teilweise — für einzelne Maschinen über deren Display',score:1},
+      {t:'Ja, über ein zentrales Dashboard, aber nicht vollständig',score:2},
+      {t:'Ja, alle Maschinen live auf einem Shopfloor-Dashboard',score:3},
+    ]},
+  b1: {
+    cat:'bde', text:'Wie werden Produktionsdaten erfasst (Auftragsstart, Stückzahlen, Stillstände)?',
+    hint:'BDE = Betriebsdatenerfassung, MDE = Maschinendatenerfassung.',
+    cond:null,
+    answers:[
+      {t:'Auf Papier (Laufkarten, Schichtprotokolle)',score:0},
+      {t:'Nachträglich in Excel am Schichtende',score:1},
+      {t:'Digital an BDE-Terminals (Barcode, Touch) am Arbeitsplatz',score:2},
+      {t:'Automatisch aus Maschinenanbindung (MDE) in Echtzeit',score:3},
+    ]},
+  b2: {
+    cat:'bde', text:'Wird die OEE (Gesamtanlageneffektivität) Ihrer Maschinen ermittelt?',
+    hint:'OEE = Verfügbarkeit × Leistung × Qualität — zentrale Kennzahl der Produktion.',
+    cond:null,
+    answers:[
+      {t:'Nein, OEE wird nicht ermittelt',score:0},
+      {t:'Manuell berechnet, z.B. in Excel — unregelmäßig',score:1},
+      {t:'Regelmäßig erhoben, aber nicht in Echtzeit',score:2},
+      {t:'Automatisch in Echtzeit berechnet und visualisiert',score:3},
+    ]},
+  b3: {
+    cat:'bde', text:'Ist ein MES (Manufacturing Execution System) im Einsatz?',
+    hint:'MES = Softwaresystem zur Steuerung und Überwachung der Produktion in Echtzeit.',
+    cond:null,
+    answers:[
+      {t:'Nein, kein MES vorhanden',score:0},
+      {t:'In Planung oder Evaluierung',score:1},
+      {t:'Ja, aber nur für Teilbereiche (z.B. nur BDE)',score:2},
+      {t:'Ja, vollintegriert mit Feinplanung, BDE und Qualität',score:3},
+    ]},
+  e1: {
+    cat:'erp', text:'Welches ERP-System setzen Sie ein?',
+    cond:null,
+    answers:[
+      {t:'Kein ERP — Aufträge werden manuell / in Excel verwaltet',score:0,next:'e3'},
+      {t:'Einfaches System (z.B. Lexware, Sage, Branchenlösung)',score:1},
+      {t:'Mittelstand-ERP (proAlpha, abas, AP+, Dynamics)',score:2},
+      {t:'Umfassendes ERP (SAP B1, SAP S/4HANA, Infor)',score:3},
+    ]},
+  e2: {
+    cat:'erp', text:'Wie durchgängig ist der digitale Auftragsfluss — vom Kunden bis zur Fertigung?',
+    hint:'Medienbrüche = Daten werden manuell von einem System ins andere übertragen.',
+    cond:'scored(e1) ≥ 1',
+    answers:[
+      {t:'Viele Medienbrüche — Auftrag wird mehrfach abgetippt',score:0},
+      {t:'ERP erzeugt Fertigungsaufträge, aber Shopfloor ist Papier',score:1},
+      {t:'Aufträge fließen digital bis zur Maschine, Rückmeldung teilw. manuell',score:2},
+      {t:'Durchgängig digital — Auftrag, Fertigung, Rückmeldung, Versand',score:3},
+    ]},
+  e3: {
+    cat:'erp', text:'Können Sie die tatsächlichen Kosten eines Auftrags nachkalkulieren?',
+    hint:'Nachkalkulation = Vergleich von Plan- und Ist-Kosten pro Auftrag.',
+    cond:null,
+    answers:[
+      {t:'Nein — Kosten werden nur pauschal geschätzt',score:0},
+      {t:'Teilweise — Materialkosten ja, Fertigungszeiten nein',score:1},
+      {t:'Ja, aber mit viel manuellem Aufwand',score:2},
+      {t:'Ja, automatisch aus BDE/MES/ERP-Daten',score:3},
+    ]},
+  q1: {
+    cat:'qual', text:'Wie werden Qualitätsprüfungen in der Produktion dokumentiert?',
+    cond:null,
+    answers:[
+      {t:'Auf Papier oder gar nicht',score:0},
+      {t:'In Excel, nachträglich erfasst',score:1},
+      {t:'Digital am Prozess (Tablet, Scanner, Eingabemaske)',score:2},
+      {t:'Automatisch mit angebundenen Messmitteln oder Sensoren',score:3,next:'q1a'},
+    ]},
+  q1a: {
+    cat:'qual', text:'Nutzen Sie SPC (Statistische Prozesskontrolle) in der laufenden Fertigung?',
+    hint:'SPC = Echtzeit-Überwachung von Qualitätsmerkmalen mit Regelkarten.',
+    cond:'scored(q1) ≥ 3',
+    answers:[
+      {t:'Nein',score:0},
+      {t:'Ja, für ausgewählte kritische Merkmale',score:2},
+      {t:'Ja, breitflächig mit automatischer Alarmierung',score:3},
+    ]},
+  q2: {
+    cat:'qual', text:'Können Sie eine Charge lückenlos zurückverfolgen (Material → Prozess → Auslieferung)?',
+    cond:null,
+    answers:[
+      {t:'Nein, Rückverfolgbarkeit ist nicht gegeben',score:0},
+      {t:'Teilweise, mit großem manuellem Aufwand',score:1},
+      {t:'Ja, digital — aber mit einzelnen Lücken',score:2},
+      {t:'Ja, vollständig und automatisch',score:3},
+    ]},
+  q3: {
+    cat:'qual', text:'Ist Ihr Unternehmen nach einem Qualitätsstandard zertifiziert?',
+    cond:null,
+    answers:[
+      {t:'Nein',score:0},
+      {t:'ISO 9001',score:1},
+      {t:'Branchenspezifisch (IATF 16949, ISO 13485, AS9100)',score:2,flag:'cert_spec'},
+      {t:'Mehrere Zertifizierungen + integriertes Managementsystem',score:3,flag:'cert_multi'},
+    ]},
+  m1: {
+    cat:'maint', text:'Welche Instandhaltungsstrategie verfolgen Sie hauptsächlich?',
+    cond:null,
+    answers:[
+      {t:'Reaktiv — repariert wird, wenn etwas ausfällt',score:0},
+      {t:'Zeitbasiert präventiv — feste Intervalle',score:1},
+      {t:'Zustandsbasiert — Wartung nach Messwerten (Vibration, Temperatur)',score:2,next:'m1a'},
+      {t:'Prädiktiv — KI-gestützte Vorhersage von Ausfällen',score:3,next:'m1a'},
+    ]},
+  m1a: {
+    cat:'maint', text:'Welche Condition-Monitoring-Verfahren setzen Sie ein?',
+    cond:'scored(m1) ≥ 2',
+    answers:[
+      {t:'Schwingungsanalyse (Vibration)',score:2},
+      {t:'Thermografie oder Ölanalyse',score:2},
+      {t:'Mehrere Verfahren kombiniert',score:3},
+      {t:'Integriertes System mit Sensorplattform und Dashboard',score:3},
+    ]},
+  m2: {
+    cat:'maint', text:'Werden Wartungshistorien und Störungsmeldungen digital erfasst?',
+    hint:'CMMS / IPS = Instandhaltungsplanungssystem.',
+    cond:null,
+    answers:[
+      {t:'Nein — Papier, Gedächtnis oder einzelne Notizen',score:0},
+      {t:'Teilweise in Excel oder E-Mail',score:1},
+      {t:'In einem einfachen CMMS / Ticketsystem',score:2},
+      {t:'Umfassendes CMMS mit Ersatzteil-, Kosten- und Zeitanalyse',score:3},
+    ]},
+  i1: {
+    cat:'it', text:'Wie ist Ihre IT-Infrastruktur aufgebaut?',
+    cond:null,
+    answers:[
+      {t:'Einzelne Rechner, keine zentrale Verwaltung',score:0},
+      {t:'Lokaler Server, teilweise veraltete Systeme',score:1},
+      {t:'Zentrale IT mit aktuellem Netzwerk und Verwaltung',score:2},
+      {t:'Cloud- oder Hybrid-Infrastruktur, zentral gemanagt',score:3,next:'i1a'},
+    ]},
+  i1a: {
+    cat:'it', text:'Wo werden Ihre Produktionsdaten verarbeitet und gespeichert?',
+    cond:'scored(i1) ≥ 3',
+    answers:[
+      {t:'Lokal auf dem Maschinenrechner',score:1},
+      {t:'Auf einem On-Premise-Server',score:2},
+      {t:'Edge-Server vor Ort + Cloud für Analyse',score:3},
+      {t:'Vollständig cloudbasiert (SaaS)',score:3},
+    ]},
+  i2: {
+    cat:'it', text:'Wie wird IT-Sicherheit in Produktion und Büro gehandhabt?',
+    hint:'IT/OT-Konvergenz = Zusammenwachsen von Büro-IT und Produktions-Netzwerken.',
+    cond:null,
+    answers:[
+      {t:'Kein systematischer Schutz, kein Backup-Konzept',score:0},
+      {t:'Virenscanner und gelegentliche Backups',score:1},
+      {t:'Firewall, regelmäßige Backups, Netzwerksegmentierung',score:2},
+      {t:'Umfassendes Konzept mit Monitoring, Notfallplan und Schulungen',score:3},
+    ]},
+  h1: {
+    cat:'people', text:'Wie digital-affin sind Ihre Mitarbeitenden im Arbeitsalltag?',
+    cond:null,
+    answers:[
+      {t:'Die meisten arbeiten bevorzugt analog / papierbasiert',score:0},
+      {t:'Grundlegende PC- und Smartphone-Nutzung vorhanden',score:1},
+      {t:'Digitale Tools werden von den meisten akzeptiert und genutzt',score:2},
+      {t:'Hohe Kompetenz — Mitarbeitende treiben Digitalisierung mit voran',score:3},
+    ]},
+  h2: {
+    cat:'people', text:'Was passiert, wenn eine erfahrene Fachkraft das Unternehmen verlässt?',
+    hint:'Wissensmanagement = systematische Erfassung und Zugänglichkeit von Erfahrungswissen.',
+    cond:null,
+    answers:[
+      {t:'Viel Wissen geht verloren — es existiert nur in Köpfen',score:0},
+      {t:'Einarbeitung dauert lange, funktioniert über Kollegen',score:1},
+      {t:'Dokumentation vorhanden, aber nicht immer aktuell',score:2},
+      {t:'Wissen ist digital erfasst, durchsuchbar und zugänglich',score:3},
+    ]},
+  h3: {
+    cat:'people', text:'Gibt es systematische Weiterbildung zu digitalen Themen?',
+    cond:'!flags.size_s (≥ 20 Mitarbeiter)',
+    answers:[
+      {t:'Nein, kein Angebot',score:0},
+      {t:'Vereinzelt, wenn sich eine Gelegenheit ergibt',score:1},
+      {t:'Gelegentliche Schulungen (z.B. bei Software-Einführung)',score:2},
+      {t:'Systematisch geplant mit Schulungsbudget und Zeitkontingent',score:3},
+    ]},
+};
+
+// ═══════════════════════════════════════════════════════════════
+// NODE POSITIONS
+// ═══════════════════════════════════════════════════════════════
+const NW = 270, NH = 46, NR = 6; // node width, height, radius
+const PW = 140, PH = 38; // pill width/height for start/end
+
+const NODES = [
+  {id:'START', label:'Start', type:'start', x:700, y:60},
+  {id:'p_size', label:'Unternehmensgröße', cat:'strat', x:700, y:170},
+  {id:'p_branch', label:'Branche / Sektor', cat:'strat', x:700, y:275},
+
+  {id:'s1', label:'Digitalisierungsstrategie', cat:'strat', x:700, y:420, branch:true},
+  {id:'s1a', label:'Verantwortlichkeit', cat:'strat', x:400, y:555, conditional:true},
+  {id:'s2', label:'Erfolgsmessung', cat:'strat', x:700, y:690},
+
+  {id:'c1', label:'Maschinenvernetzung', cat:'conn', x:700, y:840, branch:true},
+  {id:'c1a', label:'Alter Maschinenpark', cat:'conn', x:380, y:980, conditional:true},
+  {id:'c2', label:'Kommunikationsprotokolle', cat:'conn', x:1020, y:980, conditional:true},
+  {id:'c3', label:'Echtzeit-Status', cat:'conn', x:700, y:1120},
+
+  {id:'b1', label:'Produktionsdaten-Erfassung', cat:'bde', x:700, y:1265},
+  {id:'b2', label:'OEE-Ermittlung', cat:'bde', x:700, y:1375},
+  {id:'b3', label:'MES-Einsatz', cat:'bde', x:700, y:1485},
+
+  {id:'e1', label:'ERP-System', cat:'erp', x:700, y:1635, branch:true},
+  {id:'e2', label:'Digitaler Auftragsfluss', cat:'erp', x:400, y:1770, conditional:true},
+  {id:'e3', label:'Nachkalkulation', cat:'erp', x:700, y:1905},
+
+  {id:'q1', label:'Qualitätsprüfung', cat:'qual', x:700, y:2055, branch:true},
+  {id:'q1a', label:'SPC-Einsatz', cat:'qual', x:400, y:2190, conditional:true},
+  {id:'q2', label:'Chargen-Rückverfolgung', cat:'qual', x:700, y:2325},
+  {id:'q3', label:'Zertifizierungen', cat:'qual', x:700, y:2435},
+
+  {id:'m1', label:'Instandhaltungsstrategie', cat:'maint', x:700, y:2585, branch:true},
+  {id:'m1a', label:'Condition Monitoring', cat:'maint', x:400, y:2720, conditional:true},
+  {id:'m2', label:'Wartungshistorie', cat:'maint', x:700, y:2855},
+
+  {id:'i1', label:'IT-Infrastruktur', cat:'it', x:700, y:3005, branch:true},
+  {id:'i1a', label:'Datenspeicherung', cat:'it', x:400, y:3140, conditional:true},
+  {id:'i2', label:'IT-Sicherheit', cat:'it', x:700, y:3275},
+
+  {id:'h1', label:'Digitale Affinität', cat:'people', x:700, y:3420},
+  {id:'h2', label:'Wissensmanagement', cat:'people', x:700, y:3535, branch:true},
+  {id:'h3', label:'Digitale Weiterbildung', cat:'people', x:400, y:3670, conditional:true},
+  {id:'REPORT', label:'Report', type:'end', x:700, y:3810},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// EDGE DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+const EDGES = [
+  // Profiling
+  {from:'START', to:'p_size'},
+  {from:'p_size', to:'p_branch'},
+  {from:'p_branch', to:'s1'},
+
+  // Strategy
+  {from:'s1', to:'s1a', label:'Score ≥ 2', type:'branch'},
+  {from:'s1', to:'s2', label:'Score < 2', type:'skip'},
+  {from:'s1a', to:'s2', type:'return'},
+
+  // Section transition
+  {from:'s2', to:'c1'},
+
+  // Connectivity (3-way)
+  {from:'c1', to:'c1a', label:'Score = 0', type:'branch'},
+  {from:'c1', to:'c3', label:'Score 1–2', type:'straight'},
+  {from:'c1', to:'c2', label:'Score = 3', type:'branch-r'},
+  {from:'c1a', to:'c3', type:'return'},
+  {from:'c2', to:'c3', type:'return-l'},
+
+  // Section transition
+  {from:'c3', to:'b1'},
+
+  // BDE (linear)
+  {from:'b1', to:'b2'},
+  {from:'b2', to:'b3'},
+
+  // Section transition
+  {from:'b3', to:'e1'},
+
+  // ERP
+  {from:'e1', to:'e2', label:'ERP vorhanden', type:'branch'},
+  {from:'e1', to:'e3', label:'Kein ERP', type:'skip'},
+  {from:'e2', to:'e3', type:'return'},
+
+  // Section transition
+  {from:'e3', to:'q1'},
+
+  // Quality
+  {from:'q1', to:'q1a', label:'Sensorgestützt', type:'branch'},
+  {from:'q1', to:'q2', label:'Manuell', type:'skip'},
+  {from:'q1a', to:'q2', type:'return'},
+  {from:'q2', to:'q3'},
+
+  // Section transition
+  {from:'q3', to:'m1'},
+
+  // Maintenance
+  {from:'m1', to:'m1a', label:'Zustandsbasiert', type:'branch'},
+  {from:'m1', to:'m2', label:'Reaktiv', type:'skip'},
+  {from:'m1a', to:'m2', type:'return'},
+
+  // Section transition
+  {from:'m2', to:'i1'},
+
+  // IT
+  {from:'i1', to:'i1a', label:'Cloud/Hybrid', type:'branch'},
+  {from:'i1', to:'i2', label:'Lokal', type:'skip'},
+  {from:'i1a', to:'i2', type:'return'},
+
+  // Section transition
+  {from:'i2', to:'h1'},
+
+  // People
+  {from:'h1', to:'h2'},
+  {from:'h2', to:'h3', label:'≥ 20 Mitarb.', type:'branch'},
+  {from:'h2', to:'REPORT', label:'< 20 Mitarb.', type:'skip'},
+  {from:'h3', to:'REPORT', type:'return'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// CATEGORY BANDS
+// ═══════════════════════════════════════════════════════════════
+const BANDS = [
+  {cat:'strat', label:'Strategie & Organisation', y1:125, y2:740, sub:'Profiling + Strategie'},
+  {cat:'conn', label:'Maschinenvernetzung', y1:790, y2:1170},
+  {cat:'bde', label:'Betriebsdaten & MES', y1:1215, y2:1535},
+  {cat:'erp', label:'ERP & Auftragsabwicklung', y1:1585, y2:1955},
+  {cat:'qual', label:'Qualität & CAQ', y1:2005, y2:2485},
+  {cat:'maint', label:'Instandhaltung', y1:2535, y2:2905},
+  {cat:'it', label:'IT & Sicherheit', y1:2955, y2:3325},
+  {cat:'people', label:'Mitarbeiter & Kompetenz', y1:3370, y2:3720},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SVG RENDERING
+// ═══════════════════════════════════════════════════════════════
+const VB_W = 1400, VB_H = 3880;
+const svg = document.getElementById('tree');
+svg.setAttribute('viewBox', `0 0 ${VB_W} ${VB_H}`);
+
+function svgEl(tag, attrs, parent) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+function nodeById(id) { return NODES.find(n => n.id === id); }
+
+// Defs (arrowheads, filters)
+const defs = svgEl('defs', {}, svg);
+
+// Arrow markers for each category
+for (const [cat, color] of Object.entries(CC)) {
+  const m = svgEl('marker', {id:`arrow-${cat}`, viewBox:'0 0 10 6', refX:'10', refY:'3', markerWidth:'8', markerHeight:'6', orient:'auto-start-reverse'}, defs);
+  svgEl('path', {d:'M 0 0 L 10 3 L 0 6 Z', fill:color, 'fill-opacity':'0.6'}, m);
+}
+// Default arrow
+const mDef = svgEl('marker', {id:'arrow-def', viewBox:'0 0 10 6', refX:'10', refY:'3', markerWidth:'8', markerHeight:'6', orient:'auto-start-reverse'}, defs);
+svgEl('path', {d:'M 0 0 L 10 3 L 0 6 Z', fill:'#7a7872', 'fill-opacity':'0.5'}, mDef);
+// Accent arrow
+const mAcc = svgEl('marker', {id:'arrow-accent', viewBox:'0 0 10 6', refX:'10', refY:'3', markerWidth:'8', markerHeight:'6', orient:'auto-start-reverse'}, defs);
+svgEl('path', {d:'M 0 0 L 10 3 L 0 6 Z', fill:'#c8a96e', 'fill-opacity':'0.6'}, mAcc);
+
+// Glow filter
+const fGlow = svgEl('filter', {id:'glow', x:'-30%', y:'-30%', width:'160%', height:'160%'}, defs);
+svgEl('feGaussianBlur', {stdDeviation:'6', result:'blur'}, fGlow);
+const fMerge = svgEl('feMerge', {}, fGlow);
+svgEl('feMergeNode', {in:'blur'}, fMerge);
+svgEl('feMergeNode', {in:'SourceGraphic'}, fMerge);
+
+// ── Draw bands ──
+const gBands = svgEl('g', {class:'bands-layer'}, svg);
+BANDS.forEach((b, i) => {
+  const g = svgEl('g', {class:'cat-band', style:`animation-delay:${i*0.08}s`}, gBands);
+  svgEl('rect', {
+    x:60, y:b.y1, width:VB_W-120, height:b.y2-b.y1,
+    rx:8, fill:CC[b.cat], 'fill-opacity':'0.025', stroke:CC[b.cat], 'stroke-opacity':'0.06', 'stroke-width':'1'
+  }, g);
+  svgEl('text', {x:90, y:b.y1+22, class:'cat-band-label', fill:CC[b.cat]}, g).textContent = b.label;
+  if (b.sub) svgEl('text', {x:90, y:b.y1+38, class:'cat-band-sub', fill:CC[b.cat]}, g).textContent = b.sub;
+});
+
+// ── Draw edges ──
+const gEdges = svgEl('g', {class:'edges-layer'}, svg);
+
+function computePath(from, to, type) {
+  const H = NH / 2;
+  const fromH = from.type === 'start' || from.type === 'end' ? PH/2 : H;
+  const toH = to.type === 'start' || to.type === 'end' ? PH/2 : H;
+  const fy = from.y + fromH;
+  const ty = to.y - toH;
+  const dy = ty - fy;
+
+  if (!type || type === 'straight') {
+    if (from.x === to.x) return `M ${from.x},${fy} L ${to.x},${ty}`;
+    return `M ${from.x},${fy} C ${from.x},${fy+dy*0.4} ${to.x},${ty-dy*0.4} ${to.x},${ty}`;
+  }
+  if (type === 'branch' || type === 'branch-r') {
+    return `M ${from.x},${fy} C ${from.x},${fy+dy*0.35} ${to.x},${ty-dy*0.35} ${to.x},${ty}`;
+  }
+  if (type === 'skip') {
+    const bulge = 160;
+    const mx = Math.max(from.x, to.x) + bulge;
+    return `M ${from.x},${fy} C ${mx},${fy+dy*0.28} ${mx},${ty-dy*0.28} ${to.x},${ty}`;
+  }
+  if (type === 'return') {
+    return `M ${from.x},${fy} C ${from.x},${fy+dy*0.4} ${to.x},${ty-dy*0.4} ${to.x},${ty}`;
+  }
+  if (type === 'return-l') {
+    return `M ${from.x},${fy} C ${from.x},${fy+dy*0.4} ${to.x},${ty-dy*0.4} ${to.x},${ty}`;
+  }
+  return `M ${from.x},${fy} L ${to.x},${ty}`;
+}
+
+function labelPos(from, to, type) {
+  const H = NH / 2;
+  const fromH = from.type === 'start' || from.type === 'end' ? PH/2 : H;
+  const toH = to.type === 'start' || to.type === 'end' ? PH/2 : H;
+  const fy = from.y + fromH;
+  const ty = to.y - toH;
+  let mx = (from.x + to.x) / 2;
+  let my = (fy + ty) / 2;
+  if (type === 'skip') { mx = Math.max(from.x, to.x) + 120; }
+  if (type === 'branch') { mx -= 10; }
+  if (type === 'branch-r') { mx += 10; }
+  return {x: mx, y: my};
+}
+
+EDGES.forEach((e, i) => {
+  const from = nodeById(e.from);
+  const to = nodeById(e.to);
+  if (!from || !to) return;
+
+  const cat = to.cat || from.cat || null;
+  const color = cat ? CC[cat] : '#7a7872';
+  const markerEnd = cat ? `url(#arrow-${cat})` : 'url(#arrow-def)';
+  const isDashed = e.type === 'skip' || e.type === 'branch' || e.type === 'branch-r';
+  const isSkip = e.type === 'skip';
+
+  const delay = (from.y / VB_H) * 1.5;
+  const path = svgEl('path', {
+    d: computePath(from, to, e.type),
+    class: `edge-path${isDashed ? ' dashed' : ''}${isSkip ? ' skip' : ''}`,
+    stroke: color,
+    'stroke-opacity': isSkip ? '0.3' : '0.5',
+    'marker-end': markerEnd,
+    style: `animation-delay:${delay.toFixed(2)}s`
+  }, gEdges);
+
+  // Edge label
+  if (e.label) {
+    const lp = labelPos(from, to, e.type);
+    const textLen = e.label.length * 5.5 + 10;
+    const lg = svgEl('g', {class:'edge-label-group', style:`animation-delay:${delay.toFixed(2)}s;opacity:0;animation:edgeIn .6s ease forwards ${delay.toFixed(2)}s`}, gEdges);
+    svgEl('rect', {
+      x: lp.x - textLen/2, y: lp.y - 8, width: textLen, height: 16,
+      rx: 3, class:'edge-label-bg'
+    }, lg);
+    const lt = svgEl('text', {
+      x: lp.x, y: lp.y + 3, 'text-anchor': 'middle', class:'edge-label', fill: color
+    }, lg);
+    lt.textContent = e.label;
+  }
+});
+
+// ── Draw nodes ──
+const gNodes = svgEl('g', {class:'nodes-layer'}, svg);
+
+NODES.forEach((n, i) => {
+  const delay = (n.y / VB_H) * 1.8;
+  const isStartEnd = n.type === 'start' || n.type === 'end';
+  const cat = n.cat;
+  const color = cat ? CC[cat] : '#c8a96e';
+
+  const g = svgEl('g', {
+    class: `node${isStartEnd ? ` node-${n.type}` : ''}`,
+    'data-id': n.id,
+    transform: `translate(${n.x},${n.y})`,
+    style: `animation-delay:${delay.toFixed(2)}s`
+  }, gNodes);
+
+  if (isStartEnd) {
+    // Pill shape
+    svgEl('rect', {
+      class:'node-bg', x: -PW/2, y: -PH/2, width: PW, height: PH, rx: PH/2,
+      fill: color, stroke: color, 'stroke-opacity': '0.6', 'stroke-width': '1.5'
+    }, g);
+    const t = svgEl('text', {
+      class:'node-label', x:0, y:5, 'text-anchor':'middle', fill:'#0c0d0d',
+      'font-family':'Syne,sans-serif', 'font-weight':'700', 'font-size':'13'
+    }, g);
+    t.textContent = n.label;
+  } else {
+    // Regular node rect
+    const fillOpacity = n.conditional ? '0.04' : '0.06';
+    const strokeDash = n.conditional ? '4 3' : 'none';
+
+    svgEl('rect', {
+      class:'node-bg', x: -NW/2, y: -NH/2, width: NW, height: NH, rx: NR,
+      fill: color, 'fill-opacity': fillOpacity,
+      stroke: color, 'stroke-opacity': n.conditional ? '0.35' : '0.45',
+      'stroke-width': n.branch ? '1.8' : '1.2',
+      'stroke-dasharray': strokeDash
+    }, g);
+
+    // Colored left accent bar
+    svgEl('rect', {
+      x: -NW/2, y: -NH/2 + 4, width: 3, height: NH - 8, rx: 1.5,
+      fill: color, 'fill-opacity': '0.7'
+    }, g);
+
+    // Question ID
+    const idT = svgEl('text', {
+      class:'node-id-text', x: -NW/2 + 14, y: -2,
+      fill: color, 'font-size': '9', 'font-family': 'IBM Plex Mono,monospace', 'letter-spacing': '.06em'
+    }, g);
+    idT.textContent = n.id;
+
+    // Label
+    const lbl = svgEl('text', {
+      class:'node-label', x: -NW/2 + 14, y: 14,
+      fill: '#dedad4', 'font-size': '12', 'font-family': 'IBM Plex Sans,sans-serif', 'font-weight': '500'
+    }, g);
+    lbl.textContent = n.label;
+
+    // Branch indicator (diamond icon)
+    if (n.branch) {
+      const di = svgEl('text', {
+        class:'node-cond-icon', x: NW/2 - 18, y: 4,
+        fill: color, 'font-size': '14', 'text-anchor': 'middle'
+      }, g);
+      di.textContent = '◇';
+    }
+
+    // Conditional indicator
+    if (n.conditional) {
+      const ci = svgEl('text', {
+        class:'node-cond-icon', x: NW/2 - 18, y: 4,
+        fill: color, 'font-size': '9', 'text-anchor': 'middle',
+        'font-family': 'IBM Plex Mono,monospace'
+      }, g);
+      ci.textContent = 'if';
+    }
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════════════════════════════════════
+const detailPanel = document.getElementById('detail');
+const detailContent = document.getElementById('detail-content');
+const detailClose = document.getElementById('detail-close');
+
+function showDetail(id) {
+  const q = QD[id];
+  if (!q) { detailPanel.classList.remove('open'); return; }
+  const cat = q.cat;
+  const color = CC[cat];
+
+  let html = `<div class="dt-cat" style="color:${color};border-color:${color}40">${CN[cat]}</div>`;
+  html += `<div class="dt-id">ID: ${id}</div>`;
+  html += `<div class="dt-q">${q.text}</div>`;
+  if (q.hint) html += `<div class="dt-hint">${q.hint}</div>`;
+  if (q.cond) html += `<div class="dt-cond">${q.cond}</div>`;
+  html += `<div class="dt-answers-title">Antwortoptionen</div>`;
+  q.answers.forEach((a, i) => {
+    html += `<div class="dt-answer" style="border-left-color:${color}${Math.round(30 + (a.score/3)*70).toString(16).padStart(2,'0')}">`;
+    html += `<div class="a-text">${a.t}`;
+    if (a.s) html += `<span class="a-sub">${a.s}</span>`;
+    if (a.flag) html += `<span class="a-flag">flag: ${a.flag}</span>`;
+    if (a.next) html += `<span class="a-next">next: ${a.next}</span>`;
+    html += `</div>`;
+    html += `<div class="a-score">${a.score}</div>`;
+    html += `</div>`;
+  });
+  detailContent.innerHTML = html;
+  detailPanel.classList.add('open');
+}
+
+detailClose.addEventListener('click', () => detailPanel.classList.remove('open'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') detailPanel.classList.remove('open'); });
+
+// Node click handlers
+gNodes.querySelectorAll('.node').forEach(node => {
+  node.addEventListener('click', e => {
+    e.stopPropagation();
+    const id = node.getAttribute('data-id');
+    showDetail(id);
+
+    // Highlight connected edges
+    gEdges.querySelectorAll('.edge-path').forEach(p => p.style.strokeOpacity = '');
+    gEdges.querySelectorAll('.edge-label-group').forEach(g => g.style.opacity = '');
+  });
+});
+
+svg.addEventListener('click', e => {
+  if (!e.target.closest('.node')) {
+    detailPanel.classList.remove('open');
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// PAN & ZOOM
+// ═══════════════════════════════════════════════════════════════
+const wrap = document.getElementById('tree-wrap');
+let vb = {x: 0, y: 0, w: VB_W, h: VB_H};
+let isPanning = false;
+let panStart = {x: 0, y: 0};
+let vbStart = {x: 0, y: 0};
+
+function updateVB() {
+  svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+}
+
+// Zoom with scroll wheel
+wrap.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = e.deltaY > 0 ? 1.08 : 1 / 1.08;
+  const rect = svg.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width;
+  const my = (e.clientY - rect.top) / rect.height;
+  const nw = Math.max(400, Math.min(VB_W * 3, vb.w * factor));
+  const nh = Math.max(300, Math.min(VB_H * 3, vb.h * factor));
+  vb.x += (vb.w - nw) * mx;
+  vb.y += (vb.h - nh) * my;
+  vb.w = nw;
+  vb.h = nh;
+  updateVB();
+}, {passive: false});
+
+// Pan with mouse drag
+wrap.addEventListener('mousedown', e => {
+  if (e.target.closest('.node')) return;
+  isPanning = true;
+  panStart = {x: e.clientX, y: e.clientY};
+  vbStart = {x: vb.x, y: vb.y};
+  wrap.classList.add('grabbing');
+});
+window.addEventListener('mousemove', e => {
+  if (!isPanning) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleX = vb.w / rect.width;
+  const scaleY = vb.h / rect.height;
+  vb.x = vbStart.x - (e.clientX - panStart.x) * scaleX;
+  vb.y = vbStart.y - (e.clientY - panStart.y) * scaleY;
+  updateVB();
+});
+window.addEventListener('mouseup', () => {
+  isPanning = false;
+  wrap.classList.remove('grabbing');
+});
+
+// Touch pan & pinch zoom
+let lastTouches = null;
+wrap.addEventListener('touchstart', e => {
+  if (e.touches.length === 1 && !e.target.closest('.node')) {
+    isPanning = true;
+    panStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    vbStart = {x: vb.x, y: vb.y};
+  }
+  if (e.touches.length === 2) {
+    isPanning = false;
+    lastTouches = [{x: e.touches[0].clientX, y: e.touches[0].clientY},
+                   {x: e.touches[1].clientX, y: e.touches[1].clientY}];
+  }
+}, {passive: true});
+wrap.addEventListener('touchmove', e => {
+  if (isPanning && e.touches.length === 1) {
+    const rect = svg.getBoundingClientRect();
+    const scaleX = vb.w / rect.width;
+    const scaleY = vb.h / rect.height;
+    vb.x = vbStart.x - (e.touches[0].clientX - panStart.x) * scaleX;
+    vb.y = vbStart.y - (e.touches[0].clientY - panStart.y) * scaleY;
+    updateVB();
+    e.preventDefault();
+  }
+  if (e.touches.length === 2 && lastTouches) {
+    const curT = [{x: e.touches[0].clientX, y: e.touches[0].clientY},
+                  {x: e.touches[1].clientX, y: e.touches[1].clientY}];
+    const prevDist = Math.hypot(lastTouches[0].x - lastTouches[1].x, lastTouches[0].y - lastTouches[1].y);
+    const curDist = Math.hypot(curT[0].x - curT[1].x, curT[0].y - curT[1].y);
+    const factor = prevDist / curDist;
+    const rect = svg.getBoundingClientRect();
+    const cx = ((curT[0].x + curT[1].x) / 2 - rect.left) / rect.width;
+    const cy = ((curT[0].y + curT[1].y) / 2 - rect.top) / rect.height;
+    const nw = Math.max(400, Math.min(VB_W*3, vb.w * factor));
+    const nh = Math.max(300, Math.min(VB_H*3, vb.h * factor));
+    vb.x += (vb.w - nw) * cx;
+    vb.y += (vb.h - nh) * cy;
+    vb.w = nw;
+    vb.h = nh;
+    updateVB();
+    lastTouches = curT;
+    e.preventDefault();
+  }
+}, {passive: false});
+wrap.addEventListener('touchend', () => { isPanning = false; lastTouches = null; });
+
+// Zoom buttons
+document.getElementById('z-in').addEventListener('click', () => {
+  const f = 0.8;
+  const nw = vb.w * f, nh = vb.h * f;
+  vb.x += (vb.w - nw) * 0.5;
+  vb.y += (vb.h - nh) * 0.5;
+  vb.w = nw; vb.h = nh;
+  updateVB();
+});
+document.getElementById('z-out').addEventListener('click', () => {
+  const f = 1.25;
+  const nw = Math.min(VB_W*3, vb.w * f), nh = Math.min(VB_H*3, vb.h * f);
+  vb.x += (vb.w - nw) * 0.5;
+  vb.y += (vb.h - nh) * 0.5;
+  vb.w = nw; vb.h = nh;
+  updateVB();
+});
+document.getElementById('z-fit').addEventListener('click', () => {
+  vb = {x: 0, y: 0, w: VB_W, h: VB_H};
+  updateVB();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LEGEND
+// ═══════════════════════════════════════════════════════════════
+const legCats = document.getElementById('leg-cats');
+for (const [cat, color] of Object.entries(CC)) {
+  const d = document.createElement('div');
+  d.className = 'leg-item';
+  d.innerHTML = `<span class="leg-swatch" style="background:${color}"></span>${CN[cat]}`;
+  legCats.appendChild(d);
+}
+
+// Legend toggle
+document.getElementById('leg-toggle').addEventListener('click', () => {
+  document.getElementById('legend').classList.toggle('collapsed');
+});
+
+// Better initial zoom — show top third of tree at readable size
+(function setInitialZoom() {
+  const wrapRect = wrap.getBoundingClientRect();
+  const aspect = wrapRect.width / wrapRect.height;
+  const initH = 1500;
+  const initW = initH * aspect;
+  vb = { x: (VB_W - initW) / 2, y: -10, w: initW, h: initH };
+  updateVB();
+})();
+</script>
+</body>
+</html>
