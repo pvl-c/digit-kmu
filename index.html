@@ -22,15 +22,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:      #ffffff;
       --bg2:     #f7f7f7;
-      --surface: #f0f0f0;
-      --surface2:#e8e8e8;
-      --border:  #e0e0e0;
-      --border2: #cccccc;
+      --surface: #f5f5f5;
+      --surface2:#efefef;
+      --border:  #eaeaea;
+      --border2: #d8d8d8;
       --text:    #111111;
       --text2:   #555555;
       --muted:   #999999;
@@ -44,7 +44,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 400;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
@@ -80,10 +80,10 @@
     }
     nav.scrolled {
       padding: 0.9rem 3.5rem;
-      box-shadow: 0 4px 30px rgba(26,38,54,0.06);
+      box-shadow: none;
     }
     .nav-logo {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: 1.05rem; letter-spacing: 0.05em; color: var(--white);
     }
     .nav-logo span { color: var(--accent); }
@@ -137,7 +137,7 @@
     }
     .mobile-menu.open { opacity: 1; pointer-events: auto; }
     .mobile-menu a {
-      font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 600;
       color: var(--white); text-decoration: none;
       opacity: 0; transform: translateY(20px);
       transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s ease;
@@ -158,46 +158,19 @@
       padding: 0 3.5rem 5.5rem;
       position: relative; overflow: hidden;
     }
-    .hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(17,17,17,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(17,17,17,0.05) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 70%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 70%, transparent 100%);
-    }
-    .hero-glow {
-      position: absolute; bottom: -120px; left: -60px;
-      width: 700px; height: 600px;
-      background: radial-gradient(circle, rgba(17,17,17,0.08) 0%, transparent 65%);
-      pointer-events: none;
-      animation: glowPulse 6s ease-in-out infinite;
-    }
-    .hero-glow-2 {
-      position: absolute; top: -200px; right: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(17,17,17,0.04) 0%, transparent 60%);
-      pointer-events: none;
-      animation: glowPulse 8s ease-in-out infinite 2s;
-    }
-    @keyframes glowPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.08); }
-    }
+    .hero-grid { display: none; }
+    .hero-glow { display: none; }
+    .hero-glow-2 { display: none; }
     .hero-tag {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.73rem; letter-spacing: 0.14em; color: var(--accent);
       text-transform: uppercase; margin-bottom: 2rem;
       display: flex; align-items: center; gap: 0.9rem;
       opacity: 0; animation: fadeUp 0.7s ease forwards 0.15s;
     }
-    .hero-tag::before {
-      content: ''; display: block; width: 28px; height: 1px;
-      background: var(--accent); opacity: 0.6;
-    }
+    .hero-tag::before { display: none; }
     .hero h1 {
-      font-family: 'Inter', sans-serif; font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
       font-size: clamp(3rem, 6.5vw, 6rem);
       line-height: 1.03; letter-spacing: -0.025em;
       color: var(--white); max-width: 860px;
@@ -205,7 +178,6 @@
     }
     .hero h1 em {
       font-style: normal; color: var(--accent);
-      text-shadow: 0 0 80px rgba(17,17,17,0.15);
     }
     .hero-sub {
       margin-top: 2.2rem; max-width: 540px;
@@ -218,7 +190,7 @@
     }
     .hero-stat { display: flex; flex-direction: column; gap: 0.25rem; }
     .hero-stat .n {
-      font-family: 'Inter', sans-serif; font-size: 1.9rem; font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.9rem; font-weight: 800;
       color: var(--white); line-height: 1;
     }
     .hero-stat .l { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.02em; }
@@ -258,7 +230,7 @@
     /* ── SECTIONS ── */
     section { padding: 6.5rem 3.5rem; border-top: 1px solid var(--border); }
     .section-label {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
       color: var(--accent); margin-bottom: 1.1rem;
       display: flex; align-items: center; gap: 0.8rem;
@@ -268,7 +240,7 @@
       background: var(--accent); opacity: 0.5;
     }
     .section-title {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: clamp(1.9rem, 3.5vw, 2.9rem);
       line-height: 1.12; color: var(--white);
       letter-spacing: -0.015em; max-width: 640px;
@@ -303,7 +275,7 @@
     }
     .ansatz-step:hover .step-num { color: var(--accent2); }
     .step-body h4 {
-      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 600;
       color: var(--white); margin-bottom: 0.3rem;
     }
     .step-body p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; }
@@ -323,28 +295,26 @@
     .module-num { display: flex; flex-direction: column; gap: 0.6rem; padding-top: 0.2rem; }
     .module-badge {
       display: inline-block;
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem;
       letter-spacing: 0.08em; font-weight: 500;
       color: #ffffff; background: var(--accent);
       padding: 0.22rem 0.55rem;
-      transition: box-shadow 0.3s ease;
     }
     .module-item:hover .module-badge {
-      box-shadow: 0 0 16px rgba(17,17,17,0.3);
     }
     .module-slug {
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem;
       letter-spacing: 0.08em; color: var(--muted);
       text-transform: uppercase;
     }
 
     .module-kicker {
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem;
       letter-spacing: 0.1em; color: var(--accent);
       text-transform: uppercase; margin-bottom: 0.8rem;
     }
     .module-title {
-      font-family: 'Inter', sans-serif; font-size: 1.45rem; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.45rem; font-weight: 700;
       color: var(--white); letter-spacing: -0.01em;
       line-height: 1.22; margin-bottom: 1.2rem;
     }
@@ -354,16 +324,15 @@
       display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.5rem;
     }
     .tag {
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem;
       letter-spacing: 0.07em; color: var(--text2);
       border: 1px solid var(--border2); padding: 0.28rem 0.72rem;
       border-radius: 2px; text-transform: uppercase;
-      transition: border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      transition: border-color 0.3s ease, color 0.3s ease;
     }
     .tag:hover {
       border-color: var(--accent);
       color: var(--accent);
-      box-shadow: 0 0 12px rgba(17,17,17,0.08);
     }
 
     .module-outcome {
@@ -371,14 +340,13 @@
       border: 1px solid var(--border2);
       border-left: 2px solid var(--accent);
       padding: 1.8rem 1.6rem; align-self: center;
-      transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+      transition: box-shadow 0.4s ease, border-color 0.4s ease;
     }
     .module-item:hover .module-outcome {
-      box-shadow: 0 8px 32px rgba(26,38,54,0.06), 0 0 0 1px rgba(17,17,17,0.08);
-      transform: translateY(-2px);
+      box-shadow: none;
     }
     .outcome-label {
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.63rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.63rem;
       letter-spacing: 0.12em; color: var(--accent);
       text-transform: uppercase; margin-bottom: 0.9rem;
       display: flex; align-items: center; gap: 0.5rem;
@@ -405,7 +373,7 @@
       max-width: 640px; margin: 0 auto;
     }
     .cta-banner h2 {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: clamp(1.6rem, 3vw, 2.2rem);
       line-height: 1.15; color: var(--white);
       letter-spacing: -0.01em; margin-bottom: 1.2rem;
@@ -417,22 +385,21 @@
     }
     .cta-banner-btn {
       display: inline-block;
-      font-family: 'Inter', sans-serif; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
       font-size: 0.92rem; letter-spacing: 0.02em;
       color: #ffffff; background: var(--accent);
       border: none; padding: 1rem 2.8rem;
       cursor: pointer; text-decoration: none;
-      transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+      transition: box-shadow 0.3s ease, background 0.3s ease;
     }
     .cta-banner-btn:hover {
-      box-shadow: 0 0 30px rgba(17,17,17,0.35);
-      transform: translateY(-1px);
+      box-shadow: none;
       background: var(--accent2);
     }
-    .cta-banner-btn:active { transform: translateY(0); }
+    .cta-banner-btn:active { }
     .cta-banner-meta {
       margin-top: 1.5rem;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.65rem; letter-spacing: 0.1em;
       color: var(--muted); text-transform: uppercase;
     }
@@ -461,7 +428,7 @@
       letter-spacing: 0.08em; color: var(--accent); min-width: 22px; padding-top: 0.25rem;
     }
     .p-body h4 {
-      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 600;
       color: var(--white); margin-bottom: 0.3rem;
     }
     .p-body p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; }

@@ -14,16 +14,16 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23111111'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23ffffff'>D.</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg:      #ffffff;
       --bg2:     #f7f7f7;
-      --surface: #f0f0f0;
-      --surface2:#e8e8e8;
-      --border:  #e0e0e0;
-      --border2: #cccccc;
+      --surface: #f5f5f5;
+      --surface2:#efefef;
+      --border:  #eaeaea;
+      --border2: #d8d8d8;
       --text:    #111111;
       --text2:   #555555;
       --muted:   #999999;
@@ -40,7 +40,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 400;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
@@ -64,7 +64,7 @@
       border-bottom: 1px solid var(--border);
     }
     .check-nav-logo {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: 1.05rem; letter-spacing: 0.05em; color: var(--white);
       text-decoration: none;
     }
@@ -100,14 +100,13 @@
       padding: 0.6rem 3.5rem;
     }
     .progress-category {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.65rem; letter-spacing: 0.12em;
       color: var(--accent); text-transform: uppercase;
       display: flex; align-items: center; gap: 0.6rem;
     }
     .progress-category::before {
-      content: ''; width: 14px; height: 1px;
-      background: var(--accent); opacity: 0.5;
+      content: none;
     }
     .progress-count {
       font-family: 'IBM Plex Mono', monospace;
@@ -139,20 +138,20 @@
     .intro-glow {
       position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
       width: 600px; height: 500px;
-      background: radial-gradient(circle, rgba(17,17,17,0.06) 0%, transparent 65%);
+      background: none;
       pointer-events: none;
     }
     .intro-badge {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.63rem; letter-spacing: 0.14em;
       color: var(--accent); text-transform: uppercase;
-      border: 1px solid rgba(17,17,17,0.25);
+      border: none;
       padding: 0.4rem 1rem; display: inline-block;
       margin-bottom: 2.5rem;
       opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
     }
     .intro h1 {
-      font-family: 'Inter', sans-serif; font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
       font-size: clamp(2.2rem, 4.5vw, 3.8rem);
       line-height: 1.08; letter-spacing: -0.02em;
       color: var(--white); max-width: 700px;
@@ -174,7 +173,7 @@
       display: flex; flex-direction: column; gap: 0.2rem; align-items: center;
     }
     .intro-meta-item .val {
-      font-family: 'Inter', sans-serif; font-size: 1.3rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.3rem;
       font-weight: 700; color: var(--white);
     }
     .intro-meta-item .lbl {
@@ -182,7 +181,7 @@
     }
     .intro-start {
       margin-top: 3.5rem;
-      font-family: 'Inter', sans-serif; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
       font-size: 0.95rem; letter-spacing: 0.02em;
       color: var(--bg); background: var(--accent);
       border: none; padding: 1rem 3rem;
@@ -191,8 +190,6 @@
       opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s;
     }
     .intro-start:hover {
-      box-shadow: 0 0 30px rgba(17,17,17,0.35);
-      transform: translateY(-1px);
       background: var(--accent2);
     }
     .intro-start:active { transform: translateY(0); }
@@ -236,7 +233,7 @@
       margin-bottom: 1.2rem;
     }
     .q-text {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: clamp(1.4rem, 2.8vw, 1.9rem);
       line-height: 1.25; color: var(--white);
       letter-spacing: -0.01em;
@@ -250,9 +247,9 @@
       padding: 1.15rem 1.5rem;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-left: 2px solid transparent;
+      border-left: none;
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.93rem; line-height: 1.5;
       cursor: pointer;
       transition: all 0.25s ease;
@@ -261,16 +258,11 @@
     .answer-btn:hover {
       background: var(--surface2);
       border-color: var(--border2);
-      border-left-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(17,17,17,0.04);
-      transform: translateX(4px);
     }
     .answer-btn.selected {
       background: rgba(17,17,17,0.08);
       border-color: var(--accent);
-      border-left-color: var(--accent);
       color: var(--white);
-      box-shadow: 0 0 20px rgba(17,17,17,0.1);
     }
     .answer-btn .a-index {
       font-family: 'IBM Plex Mono', monospace;
@@ -317,18 +309,17 @@
       opacity: 0; animation: fadeUp 0.7s ease forwards 0.1s;
     }
     .report-badge {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.63rem; letter-spacing: 0.14em;
       color: var(--accent); text-transform: uppercase;
       margin-bottom: 1.2rem;
       display: flex; align-items: center; justify-content: center; gap: 0.6rem;
     }
     .report-badge::before, .report-badge::after {
-      content: ''; width: 20px; height: 1px;
-      background: var(--accent); opacity: 0.4;
+      content: none;
     }
     .report h1 {
-      font-family: 'Inter', sans-serif; font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
       font-size: clamp(1.8rem, 3.5vw, 2.8rem);
       line-height: 1.1; color: var(--white);
       letter-spacing: -0.02em;
@@ -352,15 +343,15 @@
       display: flex; align-items: baseline; gap: 0.6rem;
     }
     .score-big .pct {
-      font-family: 'Inter', sans-serif; font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
       font-size: 4.5rem; line-height: 1; color: var(--white);
     }
     .score-big .pct-sign {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: 1.8rem; color: var(--accent);
     }
     .score-level {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: 1.3rem; color: var(--accent);
     }
     .score-desc {
@@ -373,15 +364,14 @@
       opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s;
     }
     .cat-section-title {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.65rem; letter-spacing: 0.14em;
       color: var(--accent); text-transform: uppercase;
       margin-bottom: 1.8rem;
       display: flex; align-items: center; gap: 0.6rem;
     }
     .cat-section-title::before {
-      content: ''; width: 14px; height: 1px;
-      background: var(--accent); opacity: 0.5;
+      content: none;
     }
 
     .cat-row {
@@ -394,7 +384,7 @@
     }
     .cat-row:first-of-type { border-top: 1px solid var(--border); }
     .cat-name {
-      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem;
       font-weight: 600; color: var(--white);
     }
     .cat-bar-track {
@@ -429,25 +419,24 @@
     .rec-card {
       background: var(--surface);
       border: 1px solid var(--border2);
-      border-left: 2px solid var(--accent);
+      border-left: none;
       padding: 1.8rem 2rem;
       margin-bottom: 1rem;
       transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .rec-card:hover {
-      box-shadow: 0 6px 24px rgba(17,17,17,0.06);
-      transform: translateY(-1px);
+      background: var(--surface2);
     }
     .rec-priority {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.6rem; letter-spacing: 0.12em;
       color: var(--accent); text-transform: uppercase;
       margin-bottom: 0.7rem;
       display: flex; align-items: center; gap: 0.5rem;
     }
-    .rec-priority::before { content: '\25B8'; font-size: 0.55rem; }
+    .rec-priority::before { content: none; }
     .rec-title {
-      font-family: 'Inter', sans-serif; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
       font-size: 1.05rem; color: var(--white);
       margin-bottom: 0.6rem;
     }
@@ -471,7 +460,7 @@
       opacity: 0; animation: fadeUp 0.7s ease forwards 0.7s;
     }
     .report-cta h3 {
-      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
       font-size: 1.4rem; color: var(--white);
       margin-bottom: 0.8rem;
     }
@@ -481,15 +470,13 @@
     }
     .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .cta-primary {
-      font-family: 'Inter', sans-serif; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
       font-size: 0.88rem; color: var(--bg); background: var(--accent);
       border: none; padding: 0.9rem 2.2rem;
       cursor: pointer; text-decoration: none;
       transition: box-shadow 0.3s, transform 0.2s, background 0.3s;
     }
     .cta-primary:hover {
-      box-shadow: 0 0 24px rgba(17,17,17,0.3);
-      transform: translateY(-1px);
       background: var(--accent2);
     }
     .cta-secondary {
