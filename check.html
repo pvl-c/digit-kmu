@@ -11,28 +11,28 @@
   <meta property="og:description" content="Kostenloser Reifegrad-Check für Industrie-KMU. 16 Fragen, 5 Minuten, klare Ergebnisse.">
   <meta property="og:type" content="website">
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230c0d0d'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23c8a96e'>D.</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23111111'/><text x='4' y='23' font-family='system-ui' font-weight='800' font-size='18' fill='%23ffffff'>D.</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg:      #0c0d0d;
-      --bg2:     #111213;
-      --surface: #181a1b;
-      --surface2:#1f2122;
-      --border:  #2c2f30;
-      --border2: #3a3e3f;
-      --text:    #dedad4;
-      --text2:   #b8b4ae;
-      --muted:   #7a7872;
-      --accent:  #c8a96e;
-      --accent2: #d4b87a;
-      --white:   #f0ede8;
-      --green:   #6ec87a;
-      --yellow:  #c8b86e;
-      --red:     #c86e6e;
+      --bg:      #ffffff;
+      --bg2:     #f7f7f7;
+      --surface: #f0f0f0;
+      --surface2:#e8e8e8;
+      --border:  #e0e0e0;
+      --border2: #cccccc;
+      --text:    #111111;
+      --text2:   #555555;
+      --muted:   #999999;
+      --accent:  #111111;
+      --accent2: #333333;
+      --white:   #111111;
+      --green:   #1a8a4a;
+      --yellow:  #8a7020;
+      --red:     #cc3333;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +40,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 400;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
@@ -49,7 +49,7 @@
     }
 
     ::selection {
-      background: rgba(200,169,110,0.25);
+      background: rgba(17,17,17,0.25);
       color: var(--white);
     }
 
@@ -58,13 +58,13 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
       padding: 1.1rem 3.5rem;
-      background: rgba(12,13,13,0.9);
+      background: rgba(255,255,255,0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .check-nav-logo {
-      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-family: 'Inter', sans-serif; font-weight: 700;
       font-size: 1.05rem; letter-spacing: 0.05em; color: var(--white);
       text-decoration: none;
     }
@@ -139,20 +139,20 @@
     .intro-glow {
       position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
       width: 600px; height: 500px;
-      background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(17,17,17,0.06) 0%, transparent 65%);
       pointer-events: none;
     }
     .intro-badge {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.63rem; letter-spacing: 0.14em;
       color: var(--accent); text-transform: uppercase;
-      border: 1px solid rgba(200,169,110,0.25);
+      border: 1px solid rgba(17,17,17,0.25);
       padding: 0.4rem 1rem; display: inline-block;
       margin-bottom: 2.5rem;
       opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
     }
     .intro h1 {
-      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-family: 'Inter', sans-serif; font-weight: 800;
       font-size: clamp(2.2rem, 4.5vw, 3.8rem);
       line-height: 1.08; letter-spacing: -0.02em;
       color: var(--white); max-width: 700px;
@@ -174,7 +174,7 @@
       display: flex; flex-direction: column; gap: 0.2rem; align-items: center;
     }
     .intro-meta-item .val {
-      font-family: 'Syne', sans-serif; font-size: 1.3rem;
+      font-family: 'Inter', sans-serif; font-size: 1.3rem;
       font-weight: 700; color: var(--white);
     }
     .intro-meta-item .lbl {
@@ -182,7 +182,7 @@
     }
     .intro-start {
       margin-top: 3.5rem;
-      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-family: 'Inter', sans-serif; font-weight: 600;
       font-size: 0.95rem; letter-spacing: 0.02em;
       color: var(--bg); background: var(--accent);
       border: none; padding: 1rem 3rem;
@@ -191,7 +191,7 @@
       opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s;
     }
     .intro-start:hover {
-      box-shadow: 0 0 30px rgba(200,169,110,0.35);
+      box-shadow: 0 0 30px rgba(17,17,17,0.35);
       transform: translateY(-1px);
       background: var(--accent2);
     }
@@ -236,7 +236,7 @@
       margin-bottom: 1.2rem;
     }
     .q-text {
-      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-family: 'Inter', sans-serif; font-weight: 700;
       font-size: clamp(1.4rem, 2.8vw, 1.9rem);
       line-height: 1.25; color: var(--white);
       letter-spacing: -0.01em;
@@ -252,7 +252,7 @@
       border: 1px solid var(--border);
       border-left: 2px solid transparent;
       color: var(--text);
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 0.93rem; line-height: 1.5;
       cursor: pointer;
       transition: all 0.25s ease;
@@ -262,15 +262,15 @@
       background: var(--surface2);
       border-color: var(--border2);
       border-left-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(17,17,17,0.04);
       transform: translateX(4px);
     }
     .answer-btn.selected {
-      background: rgba(200,169,110,0.08);
+      background: rgba(17,17,17,0.08);
       border-color: var(--accent);
       border-left-color: var(--accent);
       color: var(--white);
-      box-shadow: 0 0 20px rgba(200,169,110,0.1);
+      box-shadow: 0 0 20px rgba(17,17,17,0.1);
     }
     .answer-btn .a-index {
       font-family: 'IBM Plex Mono', monospace;
@@ -328,7 +328,7 @@
       background: var(--accent); opacity: 0.4;
     }
     .report h1 {
-      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-family: 'Inter', sans-serif; font-weight: 800;
       font-size: clamp(1.8rem, 3.5vw, 2.8rem);
       line-height: 1.1; color: var(--white);
       letter-spacing: -0.02em;
@@ -352,15 +352,15 @@
       display: flex; align-items: baseline; gap: 0.6rem;
     }
     .score-big .pct {
-      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-family: 'Inter', sans-serif; font-weight: 800;
       font-size: 4.5rem; line-height: 1; color: var(--white);
     }
     .score-big .pct-sign {
-      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-family: 'Inter', sans-serif; font-weight: 700;
       font-size: 1.8rem; color: var(--accent);
     }
     .score-level {
-      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-family: 'Inter', sans-serif; font-weight: 700;
       font-size: 1.3rem; color: var(--accent);
     }
     .score-desc {
@@ -394,7 +394,7 @@
     }
     .cat-row:first-of-type { border-top: 1px solid var(--border); }
     .cat-name {
-      font-family: 'Syne', sans-serif; font-size: 0.88rem;
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
       font-weight: 600; color: var(--white);
     }
     .cat-bar-track {
@@ -435,7 +435,7 @@
       transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .rec-card:hover {
-      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 24px rgba(17,17,17,0.06);
       transform: translateY(-1px);
     }
     .rec-priority {
@@ -447,7 +447,7 @@
     }
     .rec-priority::before { content: '\25B8'; font-size: 0.55rem; }
     .rec-title {
-      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-family: 'Inter', sans-serif; font-weight: 600;
       font-size: 1.05rem; color: var(--white);
       margin-bottom: 0.6rem;
     }
@@ -471,7 +471,7 @@
       opacity: 0; animation: fadeUp 0.7s ease forwards 0.7s;
     }
     .report-cta h3 {
-      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-family: 'Inter', sans-serif; font-weight: 700;
       font-size: 1.4rem; color: var(--white);
       margin-bottom: 0.8rem;
     }
@@ -481,14 +481,14 @@
     }
     .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .cta-primary {
-      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-family: 'Inter', sans-serif; font-weight: 600;
       font-size: 0.88rem; color: var(--bg); background: var(--accent);
       border: none; padding: 0.9rem 2.2rem;
       cursor: pointer; text-decoration: none;
       transition: box-shadow 0.3s, transform 0.2s, background 0.3s;
     }
     .cta-primary:hover {
-      box-shadow: 0 0 24px rgba(200,169,110,0.3);
+      box-shadow: 0 0 24px rgba(17,17,17,0.3);
       transform: translateY(-1px);
       background: var(--accent2);
     }
@@ -1145,8 +1145,8 @@ function drawRadar(scores) {
   // Background fill
   const fillPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
   fillPoly.setAttribute('points', dataPoints.map(p => p.join(',')).join(' '));
-  fillPoly.setAttribute('fill', 'rgba(200,169,110,0.12)');
-  fillPoly.setAttribute('stroke', '#c8a96e');
+  fillPoly.setAttribute('fill', 'rgba(17,17,17,0.12)');
+  fillPoly.setAttribute('stroke', '#111111');
   fillPoly.setAttribute('stroke-width', '1.5');
   fillPoly.style.opacity = '0';
   fillPoly.style.transition = 'opacity 0.8s ease 0.3s';
@@ -1157,7 +1157,7 @@ function drawRadar(scores) {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', x); circle.setAttribute('cy', y);
     circle.setAttribute('r', '4');
-    circle.setAttribute('fill', '#c8a96e');
+    circle.setAttribute('fill', '#111111');
     circle.style.opacity = '0';
     circle.style.transition = 'opacity 0.6s ease 0.6s';
     svg.appendChild(circle);
